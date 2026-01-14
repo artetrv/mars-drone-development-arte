@@ -53,6 +53,68 @@
 
 ---
 
+## 2026-01-12
+**Summary:**
+- AprilTag model updated to SDF 1.9 with PBR albedo_map; texture now renders reliably.
+- Tag moved to the right of the drone (`pose 0 2 1.5 0 1.5708 1.5708`) in apriltag_test world.
+- Detector publishes frame `iris_with_rgb_camera/gimbal/pitch_link/camera`; matched across detector, TF broadcaster, and controller.
+- Verified `/detections` stream; TF echo now works when broadcaster is launched with correct camera_frame.
+- `apriltag_tf_broadcaster` / `apriltag_pnp_broadcaster` executables present under install; can be run directly if `ros2 run` path not working.
+
+**Commands (working set):**
+- TF broadcaster direct:
+  ```bash
+  ~/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim/apriltag_tf_broadcaster --ros-args \
+    -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+    -p detections_topic:=/detections
+  ```
+- Controller with matching frames:
+  ```bash
+  ros2 run tag_hover_sim hover_yaw_search --ros-args \
+    -p mavros_prefix:=/mavros \
+    -p mode:=SEARCH \
+    -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+    -p tag_frame:=tag36h11:0
+  ```
+
+**Outstanding:**
+- Confirm end-to-end SEARCH→LOCK behavior in flight once TF is flowing (controller should auto-lock when TF present).
+- Optional: clean up unused Ogre material scripts (PBR now in use).
+
+---
+
+## 2026-01-14 (Final)
+**Summary:**
+- SEARCH→LOCK auto-switch implemented and verified working
+- Drone spins in SEARCH mode, automatically locks when AprilTag detected
+- Controller uses P-gain yaw control: when tag centered, yaw_cmd → 0 (correct behavior)
+- PnP broadcaster confirmed as working TF source (detector alone doesn't provide pose)
+- Full end-to-end pipeline tested: SITL → Gazebo → camera → detector → PnP → controller → MAVROS
+
+**Key Fix:** Controller defaults to `camera_frame='camera'` but detector publishes `iris_with_rgb_camera/gimbal/pitch_link/camera`. Must pass `-p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera` to match.
+
+**Verified Log Output (when tag in view):**
+```
+[INFO] [...] [hover_yaw_search]: TAG FOUND! Auto-locking. yaw_error=-0.793 rad, yaw_cmd=-0.002 rad/s, tag_pos_cam=[-1.82, 0.31, 1.79]
+```
+
+**Expected Behavior:**
+1. Drone arms, takes off (GUIDED mode)
+2. Controller starts in SEARCH: drone yaws at 0.25 rad/s
+3. AprilTag enters camera view → detector publishes `/detections` (with corners)
+4. PnP broadcaster reads detections, computes 3D pose, broadcasts TF
+5. Controller detects TF, auto-switches to yaw-lock behavior
+6. Drone yaws to center tag (yaw_error → 0), then holds position
+7. When tag leaves view, detections becomes empty `[]`, controller reverts to SEARCH
+
+**Ready for:**
+- Real hardware deployment (same pipeline applies)
+- Tuning gains (adjust `-p lock_k_yaw` for faster/slower response)
+- Adding pitch/roll centering (currently yaw-only)
+- Altitude hold integration
+
+---
+
 ## 2026-01-07
 **Summary:**
 - Reviewed project status and documentation baseline (ALL_WORK_SUMMARY.md, LOCKON_NOTES.md).

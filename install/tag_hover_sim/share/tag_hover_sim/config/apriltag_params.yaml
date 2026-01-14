@@ -1,1 +1,29 @@
-/home/javierbecerril/harmonic_ws/build/tag_hover_sim/config/apriltag_params.yaml
+# AprilTag ROS configuration for simulation (mirrors real hardware config)
+# Must match the tag spawned in Gazebo world SDF
+
+apriltag_node:
+  ros__parameters:
+    # AprilTag family to detect
+    family: 36h11
+    
+    # Physical size of AprilTag in meters (must match Gazebo world SDF)
+    tag_size: 0.0376
+    
+    # Publish TF frames for detected tags
+    # Note: apriltag_pnp_broadcaster provides more stable poses via solvePnP
+    publish_tf: false
+    
+    # Z-axis orientation (false = z-forward, true = z-up)
+    z_up: false
+    
+    # Image transport settings
+    image_transport: raw
+    
+    # Detection settings
+    max_hamming: 0
+    
+    # Camera frame name (must match TF tree)
+    camera_frame: camera
+    
+    # Tag frame prefix
+    tag_frame_prefix: tag36h11

@@ -30,9 +30,22 @@ ros2 launch mavros apm.launch fcu_url:=udp://:14555@127.0.0.1:14550
 ```
 4) Start controller (lockon):
 ```bash
-ros2 run tag_hover_sim hover_yaw_search --ros-args -p mavros_prefix:=/mavros -p mode:=SEARCH
+ros2 run tag_hover_sim hover_yaw_search \
+  --ros-args \
+  -p mavros_prefix:=/mavros \
+  -p mode:=SEARCH \
+  -p rate_hz:=20.0 \
+  -p search_yaw:=0.25 \
+  -p lock_k_yaw:=0.0025 \
+  -p max_yaw_rate:=0.6 \
+  -p mavros_wait_timeout:=10.0
 ```
-5) Start camera bridge + apriltag_ros + PnP TF (see `LOCKON_NOTES.md` for exact commands).
+5) Start camera bridge + apriltag_ros + TF/PnP broadcaster (see `LOCKON_NOTES.md` for exact commands). If `ros2 run` fails for the broadcaster, call the installed binary directly (same params):
+```bash
+~/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim/apriltag_tf_broadcaster --ros-args \
+	-p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+	-p detections_topic:=/detections
+```
 
 ## Verify connection
 ```bash
