@@ -6,6 +6,8 @@ from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 from mavros_msgs.msg import State
+from rclpy.serialization import deserialize_message
+from rosidl_runtime_py.utilities import get_message
 
 import tf2_ros
 from tf2_ros import TransformException
@@ -14,16 +16,31 @@ from rclpy.time import Time
 
 class HoverYawSearch(Node):
     """
-    Semi-autonomous yaw controller:
-
-    - SUB: /mavros/state (mavros_msgs/State)
-    - TF:  camera -> tag36h11:0   (from apriltag_pnp_broadcaster)
-    - PUB: /hover_yaw_cmd (geometry_msgs/Twist)               [debug]
-    - PUB: /mavros/setpoint_velocity/cmd_vel_unstamped (Twist) [to FCU]
+    4-DOF Relative Pose Regulation Controller for AprilTag Visual Servoing
+    
+    Architecture: Image-Based Visual Servoing (IBVS) using TF transforms instead of raw pixels.
+    Implements precision landing logic (like AprilTag precision landing), but stabilizes at a 
+    fixed standoff distance instead of landing.
+    
+    Control Loops (continuous, no gating):
+    - Yaw: aligns camera optical axis with tag normal via yaw_error = atan2(x, z)
+    - Forward/backward: regulates distance to target_distance via distance_error = z - target
+    - Lateral (left/right): centers tag horizontally via lateral_error = -x
+    - Vertical (up/down): centers tag vertically via vertical_error = -y
+    
+    All 4 DOFs are controlled simultaneously using independent P controllers for smooth convergence.
+    
+    Inputs:
+    - SUB: /mavros/state (mavros_msgs/State) - FCU connection status
+    - TF:  camera_frame -> tag_frame - relative pose from apriltag_pnp_broadcaster
+    
+    Outputs:
+    - PUB: /hover_yaw_cmd (geometry_msgs/Twist) - debug echo of velocity command
+    - PUB: /mavros/setpoint_velocity/cmd_vel_unstamped (Twist) - body-frame velocity to FCU
 
     Modes:
-      SEARCH: constant yaw rate (search_yaw) until tag seen
-      LOCK:   yaw to keep tag centered using simple P controller on yaw_error
+      SEARCH: constant yaw rotation (search_yaw) until tag detected, then auto-lock
+      LOCK:   continuous 4-DOF pose regulation; falls back to SEARCH if TF lost
     """
 
     def __init__(self):
@@ -33,8 +50,16 @@ class HoverYawSearch(Node):
         self.declare_parameter('mode', 'SEARCH')
         self.declare_parameter('rate_hz', 20.0)
         self.declare_parameter('search_yaw', 0.25)          # rad/s
-        self.declare_parameter('lock_k_yaw', 1.0)           # P gain for yaw
+        self.declare_parameter('lock_k_yaw', 0.1)           # P gain for yaw
+        self.declare_parameter('lock_k_distance', 0.2)      # P gain for forward/backward (m/s per meter error)
+        self.declare_parameter('lock_k_lateral', 0.1)       # P gain for left/right (m/s per meter error)
+        self.declare_parameter('lock_k_vertical', 0.1)      # P gain for up/down (m/s per meter error)
+        self.declare_parameter('yaw_align_threshold', 0.1)  # Radians; only move forward/lateral when |yaw_error| < this
+        self.declare_parameter('target_distance', 2.0)      # Target distance from tag in meters
+        self.declare_parameter('max_forward_vel', 0.5)      # m/s clamp for forward/backward
+        self.declare_parameter('max_lateral_vel', 0.5)      # m/s clamp for left/right
         self.declare_parameter('camera_frame', 'camera')
+        self.declare_parameter('body_frame', 'base_link')   # FCU/drone body frame for MAVROS
         self.declare_parameter('tag_frame', 'tag36h11:0')
         self.declare_parameter('max_yaw_rate', 0.6)         # rad/s clamp
         self.declare_parameter('mavros_wait_timeout', 10.0)  # seconds to wait for MAVROS
@@ -44,7 +69,15 @@ class HoverYawSearch(Node):
         self.rate_hz = self.get_parameter('rate_hz').get_parameter_value().double_value
         self.search_yaw = self.get_parameter('search_yaw').get_parameter_value().double_value
         self.lock_k_yaw = self.get_parameter('lock_k_yaw').get_parameter_value().double_value
+        self.lock_k_distance = self.get_parameter('lock_k_distance').get_parameter_value().double_value
+        self.lock_k_lateral = self.get_parameter('lock_k_lateral').get_parameter_value().double_value
+        self.lock_k_vertical = self.get_parameter('lock_k_vertical').get_parameter_value().double_value
+        self.yaw_align_threshold = self.get_parameter('yaw_align_threshold').get_parameter_value().double_value
+        self.target_distance = self.get_parameter('target_distance').get_parameter_value().double_value
+        self.max_forward_vel = self.get_parameter('max_forward_vel').get_parameter_value().double_value
+        self.max_lateral_vel = self.get_parameter('max_lateral_vel').get_parameter_value().double_value
         self.camera_frame = self.get_parameter('camera_frame').get_parameter_value().string_value
+        self.body_frame = self.get_parameter('body_frame').get_parameter_value().string_value
         self.tag_frame = self.get_parameter('tag_frame').get_parameter_value().string_value
         self.max_yaw_rate = self.get_parameter('max_yaw_rate').get_parameter_value().double_value
         self.mavros_wait_timeout = self.get_parameter('mavros_wait_timeout').get_parameter_value().double_value
@@ -68,6 +101,21 @@ class HoverYawSearch(Node):
             self._state_cb,
             10
         )
+
+        # AprilTag detections for tag size measurement
+        # Use generic message subscription to avoid import errors
+        self._detections = None
+        try:
+            # Try to get the message type from apriltag_msgs (not apriltag_ros)
+            msg_type = get_message('apriltag_msgs/msg/AprilTagDetectionArray')
+            self._detections_sub = self.create_subscription(
+                msg_type,
+                '/detections',
+                self._detections_cb,
+                10
+            )
+        except Exception as e:
+            self.get_logger().warn(f"Could not subscribe to apriltag detections: {e}. Distance control disabled.")
 
         # Debug command topic
         self._hover_cmd_pub = self.create_publisher(
@@ -95,7 +143,11 @@ class HoverYawSearch(Node):
         self.get_logger().info(
             f"hover_yaw_search started. mode={self.mode}, "
             f"rate_hz={self.rate_hz}, search_yaw={self.search_yaw} rad/s, "
-            f"camera_frame={self.camera_frame}, tag_frame={self.tag_frame}"
+            f"lock_k_yaw={self.lock_k_yaw}, lock_k_distance={self.lock_k_distance} (m/s per m), "
+            f"lock_k_lateral={self.lock_k_lateral} (m/s per m), lock_k_vertical={self.lock_k_vertical} (m/s per m), "
+            f"yaw_align_threshold={self.yaw_align_threshold} rad, "
+            f"target_distance={self.target_distance} m, "
+            f"camera_frame={self.camera_frame}, body_frame={self.body_frame}, tag_frame={self.tag_frame}"
         )
 
     # ------------------------- Callbacks -------------------------
@@ -103,6 +155,64 @@ class HoverYawSearch(Node):
     def _state_cb(self, msg: State):
         self._state = msg
         self._have_state = True
+
+    def _detections_cb(self, msg):
+        """Callback for AprilTag detections (generic message)."""
+        self._detections = msg
+
+    # ------------------------- Helper Methods -------------------------
+
+    def _transform_vector_to_body(self, x_cam: float, y_cam: float, z_cam: float) -> tuple[float, float, float]:
+        """
+        Transform a vector from camera frame to body frame using TF rotation.
+        
+        Args:
+            x_cam, y_cam, z_cam: Vector components in camera frame
+            
+        Returns:
+            (x_body, y_body, z_body): Vector components in body frame
+            
+        Raises:
+            TransformException: If TF lookup fails
+        """
+        try:
+            # Lookup transform: body_frame <- camera_frame
+            tf_body_cam = self._tf_buffer.lookup_transform(
+                self.body_frame,
+                self.camera_frame,
+                Time()
+            )
+            
+            # Extract rotation quaternion
+            q = tf_body_cam.transform.rotation
+            
+            # Convert quaternion to rotation matrix
+            # Using standard quaternion to rotation matrix formula
+            qx, qy, qz, qw = q.x, q.y, q.z, q.w
+            
+            # Rotation matrix (3x3)
+            R = [
+                [1 - 2*(qy*qy + qz*qz), 2*(qx*qy - qw*qz), 2*(qx*qz + qw*qy)],
+                [2*(qx*qy + qw*qz), 1 - 2*(qx*qx + qz*qz), 2*(qy*qz - qw*qx)],
+                [2*(qx*qz - qw*qy), 2*(qy*qz + qw*qx), 1 - 2*(qx*qx + qy*qy)]
+            ]
+            
+            # Transform vector: v_body = R * v_cam
+            x_body = R[0][0]*x_cam + R[0][1]*y_cam + R[0][2]*z_cam
+            y_body = R[1][0]*x_cam + R[1][1]*y_cam + R[1][2]*z_cam
+            z_body = R[2][0]*x_cam + R[2][1]*y_cam + R[2][2]*z_cam
+            
+            return (x_body, y_body, z_body)
+            
+        except TransformException as ex:
+            raise TransformException(f"Failed to transform camera->body: {ex}")
+
+    def _get_tag_size(self) -> float | None:
+        """
+        DEPRECATED: Use 3D distance from TF instead.
+        Kept for reference only.
+        """
+        return None
 
     # ------------------------- Core loop -------------------------
 
@@ -157,25 +267,58 @@ class HoverYawSearch(Node):
                 if not math.isfinite(x) or not math.isfinite(y) or not math.isfinite(z) or abs(z) < 1e-3:
                     raise TransformException("Non-finite TF values or z ≈ 0")
 
-                # In camera frame (x right, y down, z forward), yaw error ~ atan2(x, z)
-                # Negate to correct sign: tag right (x>0) should produce negative yaw (clockwise)
-                yaw_error = -math.atan2(x, z)
+                # === PHASE 1: CAMERA-FRAME CONTROL (stable intermediate) ===
+                # Control all errors in camera optical frame before body-frame transformation
+                # Camera optical frame (OpenCV convention): X right, Y down, Z forward
+                # 
+                # Key insight: Distance MUST use camera Z-axis, not body X
+                # Yaw alignment MUST use camera geometry before body transformation
 
+                # Distance control: regulate camera Z to target distance
+                distance_error_cam = z - self.target_distance
+                
+                # Lateral control: center tag horizontally (minimize camera X)
+                lateral_error_cam = x
+                
+                # Yaw error: align camera optical axis with tag using camera geometry
+                # Positive x_cam means tag is to the right -> need to yaw right (CW, negative)
+                yaw_error = -math.atan2(x, z)
+                
+                # Vertical control: DISABLED in Phase 1 (let FCU maintain altitude)
+                # Will be reintroduced in Phase 4 after frame validation
+                vertical_error_cam = 0.0  # Placeholder for future
+
+                # === INDEPENDENT P CONTROLLERS (camera frame) ===
+                
+                # Yaw control: align camera optical axis with tag
                 yaw_cmd = self.lock_k_yaw * yaw_error
-                # Clamp yaw rate
                 yaw_cmd = max(-self.max_yaw_rate, min(self.max_yaw_rate, yaw_cmd))
 
-                cmd.angular.z = yaw_cmd
+                # Only translate when yaw is roughly aligned to avoid fighting
+                align_ok = abs(yaw_error) < self.yaw_align_threshold
 
-                # Optional: small forward/backward nudges based on distance (z)
-                # For now, keep linear all zero; you manually control height/pos
-                # cmd.linear.x = 0.0
-                # cmd.linear.y = 0.0
-                # cmd.linear.z = 0.0
+                # Forward/backward control: regulate distance using camera Z
+                forward_cmd = self.lock_k_distance * (distance_error_cam) if align_ok else 0.0
+                forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
+
+                # Left/right control: center tag in image
+                lateral_cmd = self.lock_k_lateral * (-lateral_error_cam) if align_ok else 0.0
+                lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
+
+                # Vertical control: DISABLED in Phase 1
+                vertical_cmd = 0.0
+
+                # Assemble velocity command (body frame convention)
+                cmd.linear.x = forward_cmd       # forward/back
+                cmd.linear.y = lateral_cmd       # left/right
+                cmd.linear.z = vertical_cmd      # up/down
+                cmd.angular.z = yaw_cmd          # yaw rotation
 
                 self.get_logger().info(
-                    f"LOCK: yaw_error={yaw_error:.3f} rad, yaw_cmd={yaw_cmd:.3f} rad/s, "
-                    f"tag_pos_cam=[{x:.2f}, {y:.2f}, {z:.2f}]",
+                    f"LOCK [Phase1-CamFrame]: yaw_err={yaw_error:.3f}rad yaw_cmd={yaw_cmd:.3f}rad/s | "
+                    f"p_cam[x={x:.3f},y={y:.3f},z={z:.3f}] | "
+                    f"err_cam[dist={distance_error_cam:.3f},lat={lateral_error_cam:.3f}] | "
+                    f"cmd[fwd={forward_cmd:.3f},lat={lateral_cmd:.3f},vert={vertical_cmd:.3f}]",
                     throttle_duration_sec=0.5
                 )
 
@@ -203,15 +346,33 @@ class HoverYawSearch(Node):
                 z = tf.transform.translation.z
                 
                 if math.isfinite(x) and math.isfinite(y) and math.isfinite(z) and abs(z) > 1e-3:
-                    # Tag found! Switch to lock behavior
+                    # Tag found! Use the same Phase 1 camera-frame controller as LOCK mode
+                    distance_error_cam = z - self.target_distance
+                    lateral_error_cam = x
                     yaw_error = -math.atan2(x, z)
+                    vertical_cmd = 0.0
+
                     yaw_cmd = self.lock_k_yaw * yaw_error
                     yaw_cmd = max(-self.max_yaw_rate, min(self.max_yaw_rate, yaw_cmd))
+
+                    align_ok = abs(yaw_error) < self.yaw_align_threshold
+
+                    forward_cmd = self.lock_k_distance * (distance_error_cam) if align_ok else 0.0
+                    forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
+
+                    lateral_cmd = self.lock_k_lateral * (-lateral_error_cam) if align_ok else 0.0
+                    lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
+
+                    cmd.linear.x = forward_cmd
+                    cmd.linear.y = lateral_cmd
+                    cmd.linear.z = vertical_cmd
                     cmd.angular.z = yaw_cmd
                     
                     self.get_logger().info(
-                        f"TAG FOUND! Auto-locking. yaw_error={yaw_error:.3f} rad, yaw_cmd={yaw_cmd:.3f} rad/s, "
-                        f"tag_pos_cam=[{x:.2f}, {y:.2f}, {z:.2f}]",
+                        f"SEARCH->TAG FOUND [Phase1-CamFrame]: yaw_err={yaw_error:.3f}rad yaw_cmd={yaw_cmd:.3f}rad/s | "
+                        f"p_cam[x={x:.3f},y={y:.3f},z={z:.3f}] | "
+                        f"err_cam[dist={distance_error_cam:.3f},lat={lateral_error_cam:.3f}] | "
+                        f"cmd[fwd={forward_cmd:.3f},lat={lateral_cmd:.3f},vert={vertical_cmd:.3f}]",
                         throttle_duration_sec=0.5
                     )
                 else:

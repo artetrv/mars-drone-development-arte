@@ -1,0 +1,23 @@
+[1.536s] Invoking command in '/home/javierbecerril/harmonic_ws/src/tag_hover_sim': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(drone-venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(drone-venv) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_sim build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_sim/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_sim/install.log --single-version-externally-managed install_data
+[2.109s] running egg_info
+[2.146s] writing ../../build/tag_hover_sim/tag_hover_sim.egg-info/PKG-INFO
+[2.147s] writing dependency_links to ../../build/tag_hover_sim/tag_hover_sim.egg-info/dependency_links.txt
+[2.148s] writing entry points to ../../build/tag_hover_sim/tag_hover_sim.egg-info/entry_points.txt
+[2.148s] writing requirements to ../../build/tag_hover_sim/tag_hover_sim.egg-info/requires.txt
+[2.148s] writing top-level names to ../../build/tag_hover_sim/tag_hover_sim.egg-info/top_level.txt
+[2.245s] reading manifest file '../../build/tag_hover_sim/tag_hover_sim.egg-info/SOURCES.txt'
+[2.246s] writing manifest file '../../build/tag_hover_sim/tag_hover_sim.egg-info/SOURCES.txt'
+[2.248s] running build
+[2.248s] running build_py
+[2.248s] running install
+[2.256s] running install_lib
+[2.295s] running install_data
+[2.295s] running install_egg_info
+[2.329s] removing '/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages/tag_hover_sim-0.1.0-py3.12.egg-info' (and everything under it)
+[2.330s] Copying ../../build/tag_hover_sim/tag_hover_sim.egg-info to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages/tag_hover_sim-0.1.0-py3.12.egg-info
+[2.332s] running install_scripts
+[2.621s] Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+[2.642s] Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+[2.642s] Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+[2.642s] writing list of installed files to '/home/javierbecerril/harmonic_ws/build/tag_hover_sim/install.log'
+[2.717s] Invoked command in '/home/javierbecerril/harmonic_ws/src/tag_hover_sim' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(drone-venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(drone-venv) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_sim build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_sim/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_sim/install.log --single-version-externally-managed install_data

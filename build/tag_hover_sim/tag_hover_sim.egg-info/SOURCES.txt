@@ -1,4 +1,3 @@
-README.md
 package.xml
 setup.cfg
 setup.py
@@ -16,3 +15,11 @@ tag_hover_sim/__init__.py
 tag_hover_sim/apriltag_pnp_broadcaster.py
 tag_hover_sim/apriltag_tf_broadcaster.py
 tag_hover_sim/hover_yaw_search.py
+tag_hover_sim/hover_yaw_search_v1.py
+tag_hover_sim.egg-info/PKG-INFO
+tag_hover_sim.egg-info/SOURCES.txt
+tag_hover_sim.egg-info/dependency_links.txt
+tag_hover_sim.egg-info/entry_points.txt
+tag_hover_sim.egg-info/requires.txt
+tag_hover_sim.egg-info/top_level.txt
+tag_hover_sim.egg-info/zip-safe

@@ -91,14 +91,14 @@ python3 ~/apriltag_pnp_broadcaster.py
 5) **ArduPilot SITL** (SIM ONLY)
 ```bash
 cd ~/ardupilot/ArduCopter
-../Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --console --map
+./Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --map --console --out=127.0.0.1:14550 --out=127.0.0.1:14555
 ```
 
 6) **MAVROS + Controller** (IDENTICAL structure)
 ```bash
 source /opt/ros/jazzy/setup.bash
 source ~/harmonic_ws/install/setup.bash
-ros2 launch tag_hover_sim sim_lockon_backbone.launch.py mode:=SEARCH
+ros2 launch tag_hover_sim sim_lockon_backbone.launch.py mode:=SEARCH camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera
 ```
 
 7) **Arm and takeoff** (in MAVProxy)
@@ -164,9 +164,54 @@ Edit `config/apriltag_params.yaml` to match your Gazebo world:
 
 **Important:** Ensure `tag_size` matches the tag model size in your Gazebo SDF file.
 
+### Controller Versions
+
+Two controller implementations are available:
+
+**`hover_yaw_search_v1` (STABLE BASELINE - DO NOT EDIT):**
+- 4-DOF control using camera-frame errors directly
+- Reliable convergence with small position offset (~0.4m)
+- This version is locked as the standard reference controller
+- Always use this for flight testing and demos
+
+**`hover_yaw_search` (DEVELOPMENT VERSION):**
+- Phase-1 camera-frame IBVS with yaw gating and lateral deadband (0.05 m) applied; forward sign matches v1
+- Residual behavior: slight right drift greatly reduced; vertical command held at 0.0
+- Next steps (open): add vertical safety clamp/deadband; add ROS↔MAVROS axis sanity log; proceed to Phase-2 body-frame regulation later
+
 ### Controller Parameters
 
-The `hover_yaw_search` node reads its own defaults (matching real hardware behavior). You can override `mode` via launch arg. Other parameters can be tuned at runtime using `ros2 param set`.
+Both controllers implement **4-DOF relative pose regulation** (yaw, forward/back, lateral, vertical) similar to AprilTag precision landing, but stabilizing at a fixed standoff distance instead of landing.
+
+**Key parameters:**
+- `mode`: `SEARCH` or `LOCK` (default: `SEARCH`)
+- `camera_frame`: **CRITICAL** - must match broadcaster's camera frame (e.g., `iris_with_rgb_camera/gimbal/pitch_link/camera`)
+- `body_frame`: drone body frame name (default: `base_link`)
+- `target_distance`: desired standoff distance in meters (default: 2.0)
+- `lock_k_yaw`: P gain for yaw alignment (default: 0.1)
+- `lock_k_distance`: P gain for distance control (default: 0.2 m/s per m)
+- `lock_k_lateral`: P gain for horizontal centering (default: 0.1 m/s per m)
+- `lock_k_vertical`: P gain for vertical centering (default: 0.1 m/s per m)
+- `max_yaw_rate`, `max_forward_vel`, `max_lateral_vel`: velocity limits for safety
+
+You can override parameters via launch args or tune at runtime using `ros2 param set`.
+
+**Control architecture:** All 4 DOFs are controlled continuously and simultaneously (no gating). This ensures smooth convergence to the desired relative pose without oscillation or drift.
+
+**Example launch (v1 - stable):**
+```bash
+ros2 run tag_hover_sim hover_yaw_search_v1 \
+  --ros-args \
+  -p body_frame:=base_link \
+  -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+  -p mavros_prefix:=/mavros \
+  -p mode:=SEARCH \
+  -p rate_hz:=20.0 \
+  -p search_yaw:=0.25 \
+  -p lock_k_yaw:=0.1 \
+  -p max_yaw_rate:=0.6 \
+  -p mavros_wait_timeout:=10.0
+```
 
 ## Troubleshooting
 

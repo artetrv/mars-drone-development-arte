@@ -221,3 +221,25 @@ Filtering (Extended Kalman Filter or Graph-Based):
 
 ---
 
+## Active Roadmap (Tracking)
+
+**Short-term (Weeks 1–4):**
+- [ ] Extend controller to 3-DOF lock (X, Y, Z)
+- [ ] Integrate dual-tag detection in AprilTag pipeline
+- [ ] Implement reference-tag differencing post-processing script
+- [ ] Validate dual-tag method on simulation (Gazebo)
+
+**Medium-term (Weeks 5–12):**
+- [ ] Deploy controller + dual-tag on real Iris hardware
+- [ ] Conduct Experiment 1: Baseline validation (simulation)
+- [ ] Conduct Experiment 2: Real hardware lab environment
+- [ ] Conduct Experiment 3: Environmental sensitivity analysis
+- [ ] Integrate IMU/optical flow into sensor fusion framework
+- [ ] Generate preliminary measurement accuracy report
+
+**Long-term (Weeks 13+):**
+- [ ] Field deployment on larger structures
+- [ ] Publish methodology and validation results
+
+---
+

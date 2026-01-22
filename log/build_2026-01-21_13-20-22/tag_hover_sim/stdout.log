@@ -1,0 +1,21 @@
+running develop
+running egg_info
+writing tag_hover_sim.egg-info/PKG-INFO
+writing dependency_links to tag_hover_sim.egg-info/dependency_links.txt
+writing entry points to tag_hover_sim.egg-info/entry_points.txt
+writing requirements to tag_hover_sim.egg-info/requires.txt
+writing top-level names to tag_hover_sim.egg-info/top_level.txt
+reading manifest file 'tag_hover_sim.egg-info/SOURCES.txt'
+writing manifest file 'tag_hover_sim.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages/tag-hover-sim.egg-link (link to .)
+Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/tag_hover_sim
+
+Installed /home/javierbecerril/harmonic_ws/build/tag_hover_sim
+running symlink_data
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_sim/resource/tag_hover_sim -> /home/javierbecerril/harmonic_ws/install/tag_hover_sim/share/ament_index/resource_index/packages
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_sim/package.xml -> /home/javierbecerril/harmonic_ws/install/tag_hover_sim/share/tag_hover_sim
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_sim/launch/sim_lockon_backbone.launch.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_sim/share/tag_hover_sim/launch
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_sim/config/apriltag_params.yaml -> /home/javierbecerril/harmonic_ws/install/tag_hover_sim/share/tag_hover_sim/config
