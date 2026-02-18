@@ -6,6 +6,7 @@ Last updated: 2025-12-20.
 ## Workspace layout (relevant to this repo)
 - `src/ardupilot_gazebo/` — Models/worlds for ArduPilot Gazebo integration (installed into `install/ardupilot_gazebo/...`).
 - `src/tag_hover_sim/` — AprilTag hover/yaw-search simulation (Gazebo Harmonic + ArduPilot SITL).
+- `src/tag_hover_two_tags/` — Two-tag relative pose measurement stack (Gazebo Harmonic + ArduPilot SITL).
 - `LOCKON_NOTES.md` — Hands-on notes for the lockon/tag hover workflow.
 
 ## Packages
@@ -23,12 +24,34 @@ Last updated: 2025-12-20.
   - `gimbal_small_3d_fixed` — Locked-joint gimbal used by the RGB model.
 - `worlds/`
   - `apriltag_test.sdf`, `testing_nodrone.sdf` — Local test worlds.
-- `tag_hover_sim/`
-  - `hover_yaw_search.py` — Controller node (SEARCH yaw sweep; LOCK uses TF yaw error).
+- `tag_hover_sim/` (Controllers)
+  - `hover_yaw_search.py` — Reference implementation (SEARCH/LOCK).
+  - `hover_yaw_search_v2.py` — Phase 1 (ALIGN) template.
+  - `hover_yaw_search_sensor_lock.py` — **3-phase hybrid (recommended for hardware)**. Phases: SEARCH → ALIGN → HOVER_BOX → SENSOR_HOVER.
   - `apriltag_pnp_broadcaster.py`, `tag_overlay.py` — Helpers (TF, debug).
 - Docs: `README.md`, `QUICK_REFERENCE.md`, `PACKAGE_SUMMARY.md`, plus repo-level `LOCKON_NOTES.md`.
 - Key topics: `/camera/image_raw`, `/camera/camera_info`, `/detections`, `/tf` (camera -> tag36h11:0), `/mavros/state`, `/mavros/setpoint_velocity/cmd_vel_unstamped`, `/hover_yaw_cmd`.
-- Modes: SEARCH (const yaw), LOCK (P yaw on tag).
+- Controllers: `hover_yaw_search` (v1 ref), `hover_yaw_search_v2` (Phase 1), `hover_yaw_search_sensor_lock` (3-phase hybrid).
+
+### tag_hover_two_tags
+- `package.xml` — ROS 2 package manifest.
+- `setup.py` — installs launch + config; registers console-scripts.
+- `launch/`
+  - `sim_vision_stack.launch.py` — Gazebo + camera bridge + apriltag detector + tag pose selectors.
+  - `sim_lockon_backbone.launch.py` — Relative pose estimator + CSV logger.
+- `config/`
+  - `apriltag_params.yaml` — AprilTag detector config (36h11).
+- `worlds/`
+  - `apriltag_two_tags.sdf` — Two-tag test world.
+- `tag_hover_two_tags/` (Nodes)
+  - `tag_pose_selector.py` — Extracts PoseStamped for a specific tag ID.
+  - `relative_vibration_pose.py` — Time-sync + relative transform + CSV logging.
+  - `tag_oscillator.py` — Sinusoidal joint command publisher for the vibrating tag.
+  - `apriltag_tf_broadcaster.py` — TF broadcaster for detections.
+  - `apriltag_pnp_broadcaster.py` — PnP TF broadcaster using camera intrinsics.
+- `tag_hover_controller/`
+  - `hover_yaw_search.py` — Standalone yaw-search controller (not registered as a console script).
+- Key topics: `/detections`, `/apriltag_ref/pose`, `/apriltag_vib/pose`, `/relative_vibration_pose`.
 
 ### ardupilot_gazebo
 - Provides models/worlds for ArduPilot + Gazebo (e.g., `iris_with_ardupilot`, `zephyr` variants, parachute, gimbal worlds).
@@ -40,6 +63,12 @@ Last updated: 2025-12-20.
 - Detection: `/detections` (from `apriltag_ros`), TF `camera -> tag36h11:0`.
 - Control: `/hover_yaw_cmd` (debug), `/mavros/setpoint_velocity/cmd_vel_unstamped` (to FCU).
 - State: `/mavros/state` (connection/mode), `/mavros/local_position/...` (if needed).
+
+## Quick topic graph (two-tag measurement)
+- Camera: `/camera/image_raw`, `/camera/camera_info` (bridged from Gazebo).
+- Detection: `/detections` (from `apriltag_ros`).
+- Pose selection: `/apriltag_ref/pose`, `/apriltag_vib/pose` (PoseStamped).
+- Relative output: `/relative_vibration_pose` (PoseStamped, ref frame).
 
 ## Paths and env hints
 - Workspace root: `~/harmonic_ws`

@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: tag-hover-sim
+Version: 0.1.0
+Summary: Simulation integration package for AprilTag hover/yaw-search stack in Gazebo Harmonic + ArduPilot SITL
+Maintainer: Javier Becerril
+Maintainer-email: javierbecerril@example.com
+License: MIT

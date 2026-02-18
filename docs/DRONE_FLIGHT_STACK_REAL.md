@@ -168,14 +168,23 @@ sudo reboot
 
 ## 4. Flight Operations (Step-by-Step)
 
-### Terminal 1: Start MAVROS
+### Terminal 1: Start MAVProxy (Serial Owner)
+```bash
+# MAVProxy owns the serial port and bridges to UDP for MAVROS
+mavproxy.py --master=/dev/ttyAMA0 --baudrate=57600 --out=udp:127.0.0.1:14555
+
+# This allows MAVROS to connect via UDP (see Terminal 1b below)
+# You can also use MAVProxy for arming/mode changes/takeoff
+```
+
+**Verify:** You should see heartbeat messages and `online system 1`.
+
+### Terminal 1b: Start MAVROS (UDP Client)
 ```bash
 source ~/drone_ws/install/setup.bash
 
-# IMPORTANT: Update fcu_url to match YOUR serial port and baud rate
-ros2 launch mavros apm.launch fcu_url:=serial:///dev/ttyAMA0:921600
-
-# Common baud rates: 57600, 115200, 921600 (check Pixhawk SERIAL1_BAUD parameter)
+# MAVROS connects to MAVProxy's UDP output
+ros2 launch mavros apm.launch fcu_url:=udp://:14555@127.0.0.1:14550
 ```
 
 **Verify:** You should see `CON: Got HEARTBEAT` messages.
@@ -186,9 +195,14 @@ source ~/drone_ws/install/setup.bash
 
 # V4L2 camera (adjust video_device to your camera)
 ros2 run v4l2_camera v4l2_camera_node --ros-args \
-  -p video_device:=/dev/video0 \
-  -p image_size:=[640,480] \
-  -p camera_frame_id:=camera
+  -p video_device:=/dev/video4 \
+  -p "image_size:='[1280,720]" \
+  -p time_per_frame.num:=1 \
+  -p time_per_frame.den:=30 \
+  -p pixel_format:=YUYV \
+  -p output_encoding:=rgb8 \
+  -p frame_id:=camera \
+  -p camera_info_url:=file:///home/mars/.ros/camera_info/camera_1280x720.yaml
 
 # Verify topics exist:
 # ros2 topic hz /image_raw        # Should show ~30 Hz
@@ -229,8 +243,9 @@ ros2 run tag_hover_sim apriltag_pnp_broadcaster --ros-args \
 source ~/drone_ws/install/setup.bash
 
 # Start in SEARCH mode (will auto-lock when tag detected)
-ros2 run tag_hover_sim hover_yaw_search --ros-args \
+ros2 run tag_hover_controller hover_yaw_search --ros-args \
   -p mode:=SEARCH \
+  -p rate_hz:=20.0 \
   -p camera_frame:=camera \
   -p body_frame:=base_link \
   -p tag_frame:=tag36h11:0 \
@@ -251,16 +266,13 @@ ros2 run tag_hover_sim hover_yaw_search --ros-args \
 
 ### Manual Flight Commands (Terminal 6)
 ```bash
-# Install MAVProxy if not already installed
-pip3 install MAVProxy
+# MAVProxy is already running in Terminal 1
+# Use that terminal's console for commands:
 
-# Connect to Pixhawk
-mavproxy.py --master=/dev/ttyAMA0 --baudrate=921600
-
-# In MAVProxy console:
-mode GUIDED
+# For optical flow (no GPS) drone, use GUIDED_NOGPS:
+mode GUIDED_NOGPS
 arm throttle
-takeoff 3
+takeoff 1
 
 # Controller will now be active!
 # Watch Terminal 5 for controller status
@@ -270,6 +282,9 @@ mode LAND
 
 # Emergency:
 mode STABILIZE  # Returns manual control to RC
+
+# Alternative: Use Mission Planner
+# Connect via UDP to Pi_IP:14550 (MAVProxy bridges to it)
 ```
 
 ---
@@ -426,13 +441,16 @@ ros2 node info /hover_yaw_search
 
 ## 9. Quick Reference Commands
 
-**Start all nodes (5 terminals):**
+**Start all nodes (6 terminals):**
 ```bash
-# Terminal 1: MAVROS
-ros2 launch mavros apm.launch fcu_url:=serial:///dev/ttyAMA0:921600
+# Terminal 1: MAVProxy (Serial Owner)
+mavproxy.py --master=/dev/ttyAMA0 --baudrate=57600 --out=udp:127.0.0.1:14555
+
+# Terminal 1b: MAVROS (UDP Client)
+ros2 launch mavros apm.launch fcu_url:=udp://:14555@127.0.0.1:14550
 
 # Terminal 2: Camera
-ros2 run v4l2_camera v4l2_camera_node --ros-args -p video_device:=/dev/video0
+ros2 run v4l2_camera v4l2_camera_node --ros-args -p video_device:=/dev/video4 -p "image_size:='[1280,720]" -p time_per_frame.num:=1 -p time_per_frame.den:=30 -p pixel_format:=YUYV -p output_encoding:=rgb8 -p frame_id:=camera -p camera_info_url:=file:///home/mars/.ros/camera_info/camera_1280x720.yaml
 
 # Terminal 3: Detector
 ros2 run apriltag_ros apriltag_node --ros-args --params-file ~/drone_ws/install/tag_hover_sim/share/tag_hover_sim/config/apriltag_params.yaml -r image_rect:=/image_raw -r camera_info:=/camera_info
@@ -441,7 +459,7 @@ ros2 run apriltag_ros apriltag_node --ros-args --params-file ~/drone_ws/install/
 ros2 run tag_hover_sim apriltag_pnp_broadcaster --ros-args -p camera_frame:=camera -p tag_size_m:=0.162
 
 # Terminal 5: Controller
-ros2 run tag_hover_sim hover_yaw_search --ros-args -p mode:=SEARCH
+ros2 run tag_hover_controller hover_yaw_search --ros-args -p mode:=SEARCH -p rate_hz:=20.0
 ```
 
 **Verification commands:**

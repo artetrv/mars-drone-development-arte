@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "ardupilot_msgs/srv/detail/arm_motors__struct.h"
 #include "rosidl_typesupport_interface/macros.h"
+#include "ardupilot_msgs/srv/detail/arm_motors__struct.h"
 #include "ardupilot_msgs/srv/detail/arm_motors__functions.h"
 #include "ardupilot_msgs/srv/detail/arm_motors__type_support.h"
 

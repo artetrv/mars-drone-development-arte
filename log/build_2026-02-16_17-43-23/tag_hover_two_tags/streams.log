@@ -1,0 +1,28 @@
+[0.942s] Invoking command in '/home/javierbecerril/harmonic_ws/src/tag_hover_two_tags': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_two_tags build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log --single-version-externally-managed install_data
+[1.162s] running egg_info
+[1.178s] writing ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/PKG-INFO
+[1.178s] writing dependency_links to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/dependency_links.txt
+[1.178s] writing entry points to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/entry_points.txt
+[1.178s] writing requirements to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/requires.txt
+[1.178s] writing top-level names to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/top_level.txt
+[1.212s] reading manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+[1.213s] writing manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+[1.213s] running build
+[1.213s] running build_py
+[1.213s] running install
+[1.218s] running install_lib
+[1.234s] running install_data
+[1.234s] copying worlds/apriltag_two_tags.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/worlds
+[1.235s] running install_egg_info
+[1.248s] removing '/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info' (and everything under it)
+[1.248s] Copying ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info
+[1.249s] running install_scripts
+[1.359s] Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing tag_overlay script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.360s] writing list of installed files to '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log'
+[1.400s] Invoked command in '/home/javierbecerril/harmonic_ws/src/tag_hover_two_tags' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_two_tags build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log --single-version-externally-managed install_data

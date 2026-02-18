@@ -1,0 +1,7 @@
+numpy>=1.21.0
+opencv-python>=4.5.0
+rclpy>=0.13.0
+geometry-msgs
+sensor-msgs
+std-msgs
+tf2-ros

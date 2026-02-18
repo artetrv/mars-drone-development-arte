@@ -4,10 +4,10 @@
 
 #include <string.h>
 
-#include "ardupilot_msgs/msg/detail/rc__functions.h"
 #include "rosidl_typesupport_interface/macros.h"
-#include "ardupilot_msgs/msg/detail/rc__struct.h"
 #include "ardupilot_msgs/msg/detail/rc__type_support.h"
+#include "ardupilot_msgs/msg/detail/rc__functions.h"
+#include "ardupilot_msgs/msg/detail/rc__struct.h"
 
 #ifdef __cplusplus
 extern "C"

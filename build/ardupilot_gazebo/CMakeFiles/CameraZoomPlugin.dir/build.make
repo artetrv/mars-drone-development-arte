@@ -106,7 +106,7 @@ libCameraZoomPlugin.so: /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.13
 libCameraZoomPlugin.so: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.13
 libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_physics_vendor/lib/libgz-physics7.so.7.6.0
 libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_plugin_vendor/lib/libgz-plugin2.so.2.0.4
-libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_rendering_vendor/lib/libgz-rendering8.so.8.2.2
+libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_rendering_vendor/lib/libgz-rendering8.so.8.2.3
 libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_common_vendor/lib/libgz-common5-events.so.5.7.1
 libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_common_vendor/lib/libgz-common5-geospatial.so.5.7.1
 libCameraZoomPlugin.so: /opt/ros/jazzy/opt/gz_common_vendor/lib/libgz-common5-graphics.so.5.7.1

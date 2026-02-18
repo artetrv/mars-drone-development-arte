@@ -105,7 +105,8 @@ CMakeFiles/ardupilot_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/ard
  /usr/include/c++/13/pstl/glue_algorithm_defs.h \
  /usr/include/c++/13/pstl/execution_defs.h /usr/include/c++/13/array \
  /usr/include/c++/13/compare /usr/include/c++/13/bits/range_access.h \
- /usr/include/c++/13/memory /usr/include/c++/13/bits/memoryfwd.h \
+ /usr/include/c++/13/cstdint /usr/include/c++/13/memory \
+ /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/c++/13/bits/allocator.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h \
  /usr/include/c++/13/bits/new_allocator.h \

@@ -1,0 +1,21 @@
+[1.889s] Invoking command in '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build --no-deps symlink_data
+[2.594s] running develop
+[3.022s] running egg_info
+[3.062s] writing tag_hover_two_tags.egg-info/PKG-INFO
+[3.063s] writing dependency_links to tag_hover_two_tags.egg-info/dependency_links.txt
+[3.064s] writing entry points to tag_hover_two_tags.egg-info/entry_points.txt
+[3.064s] writing requirements to tag_hover_two_tags.egg-info/requires.txt
+[3.065s] writing top-level names to tag_hover_two_tags.egg-info/top_level.txt
+[3.146s] reading manifest file 'tag_hover_two_tags.egg-info/SOURCES.txt'
+[3.148s] writing manifest file 'tag_hover_two_tags.egg-info/SOURCES.txt'
+[3.192s] running build_ext
+[3.192s] Creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag-hover-two-tags.egg-link (link to .)
+[3.194s] Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[3.195s] Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[3.196s] Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[3.196s] Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[3.197s] Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[3.197s] 
+[3.198s] Installed /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags
+[3.198s] running symlink_data
+[3.276s] Invoked command in '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build --no-deps symlink_data

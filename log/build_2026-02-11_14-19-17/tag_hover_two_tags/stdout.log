@@ -1,0 +1,56 @@
+running develop
+running egg_info
+writing tag_hover_two_tags.egg-info/PKG-INFO
+writing dependency_links to tag_hover_two_tags.egg-info/dependency_links.txt
+writing entry points to tag_hover_two_tags.egg-info/entry_points.txt
+writing requirements to tag_hover_two_tags.egg-info/requires.txt
+writing top-level names to tag_hover_two_tags.egg-info/top_level.txt
+reading manifest file 'tag_hover_two_tags.egg-info/SOURCES.txt'
+writing manifest file 'tag_hover_two_tags.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag-hover-two-tags.egg-link (link to .)
+Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+
+Installed /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags
+running symlink_data
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_standoffs/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_standoffs/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_standoffs/meshes/iris_prop_cw.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_standoffs/meshes/iris.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_standoffs/meshes/iris_prop_ccw.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/Apriltag36_11_00001/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/Apriltag36_11_00001/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures/tag36_11_00001.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures/tag36_11_00001.png:Zone.Identifier -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/scripts
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/Apriltag36_11_00001/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/scripts
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_rgb_camera
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_rgb_camera/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_rgb_camera
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/iris_with_rgb_camera/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_rgb_camera
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_0/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_0/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/textures
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_0/materials/textures/tag36h11_0.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/textures
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/scripts
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_0/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/scripts
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_1/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_1/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures/tag36h11_1.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures/tag36h11_0.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/scripts
+symbolically linking /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/models/apriltag_36h11_1/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/scripts

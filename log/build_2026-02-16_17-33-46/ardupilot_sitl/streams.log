@@ -1,0 +1,68 @@
+[0.284s] Invoking command in '/home/javierbecerril/harmonic_ws/build/ardupilot_sitl': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags:/home/javierbecerril/harmonic_ws/install/tag_hover_sim:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib:/usr/local/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/build/my-test-package:/home/javierbecerril/harmonic_ws/install/my-test-package/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/cmake /home/javierbecerril/harmonic_ws/src/ardupilot/Tools/ros2/ardupilot_sitl -DCMAKE_INSTALL_PREFIX=/home/javierbecerril/harmonic_ws/install/ardupilot_sitl
+[0.298s] -- Found ament_cmake: 2.5.5 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.606s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.613s] -- WAF_COMMAND: /home/javierbecerril/harmonic_ws/src/ardupilot/waf
+[0.746s] -- Found ament_lint_auto: 0.17.4 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[3.399s] -- Added test 'copyright' to check source files copyright and LICENSE
+[3.400s] -- Added test 'lint_cmake' to check CMake code style
+[3.400s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[3.401s] -- Added test 'xmllint' to check XML markup files
+[3.402s] -- Configuring done (3.1s)
+[3.410s] -- Generating done (0.0s)
+[3.412s] -- Build files have been written to: /home/javierbecerril/harmonic_ws/build/ardupilot_sitl
+[3.417s] Invoked command in '/home/javierbecerril/harmonic_ws/build/ardupilot_sitl' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags:/home/javierbecerril/harmonic_ws/install/tag_hover_sim:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib:/usr/local/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/build/my-test-package:/home/javierbecerril/harmonic_ws/install/my-test-package/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/cmake /home/javierbecerril/harmonic_ws/src/ardupilot/Tools/ros2/ardupilot_sitl -DCMAKE_INSTALL_PREFIX=/home/javierbecerril/harmonic_ws/install/ardupilot_sitl
+[3.417s] Invoking command in '/home/javierbecerril/harmonic_ws/build/ardupilot_sitl': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags:/home/javierbecerril/harmonic_ws/install/tag_hover_sim:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib:/usr/local/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/build/my-test-package:/home/javierbecerril/harmonic_ws/install/my-test-package/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/cmake --build /home/javierbecerril/harmonic_ws/build/ardupilot_sitl -- -j12 -l12
+[3.474s] Built target ament_cmake_python_symlink_ardupilot_sitl
+[3.695s] [32m[0mSetting top to                           :[0m [0m[32m[32m/home/javierbecerril/harmonic_ws/src/ardupilot[0m [0m
+[3.695s] [32m[0mSetting out to                           :[0m [0m[32m[32m/home/javierbecerril/harmonic_ws/src/ardupilot/build[0m [0m
+[3.697s] running egg_info
+[3.705s] [32m[0mAutoconfiguration                        :[0m [0m[32m[32menabled[0m [0m
+[3.705s] [32m[0mChecking for program 'python'            :[0m [0m[32m[32m/home/javierbecerril/venv-ardupilot/bin/python3[0m [0m
+[3.714s] writing ardupilot_sitl.egg-info/PKG-INFO
+[3.715s] writing dependency_links to ardupilot_sitl.egg-info/dependency_links.txt
+[3.715s] writing top-level names to ardupilot_sitl.egg-info/top_level.txt
+[3.760s] reading manifest file 'ardupilot_sitl.egg-info/SOURCES.txt'
+[3.760s] writing manifest file 'ardupilot_sitl.egg-info/SOURCES.txt'
+[3.795s] Built target ament_cmake_python_build_ardupilot_sitl_egg
+[4.045s] [32m[0mChecking for python version >= 3.8.0     :[0m [0m[32m[32m3.12.3[0m [0m
+[4.046s] [32m[0mSetting board to                         :[0m [0m[32m[32msitl[0m [0m
+[4.047s] [32m[0mUsing toolchain                          :[0m [0m[32m[32mnative[0m [0m
+[4.060s] [32m[0mChecking for 'g++' (C++ compiler)        :[0m [0m[32m[32m/usr/bin/g++[0m [0m
+[4.072s] [32m[0mChecking for 'gcc' (C compiler)          :[0m [0m[32m[32m/usr/bin/gcc[0m [0m
+[4.092s] [32m[0mChecking for c flags '-MMD'              :[0m [0m[32m[32myes[0m [0m
+[4.109s] [32m[0mChecking for cxx flags '-MMD'            :[0m [0m[32m[32myes[0m [0m
+[4.109s] [32m[0mCXX Compiler                             :[0m [0m[32m[32mg++ 13.3.0[0m [0m
+[4.350s] [32m[0mChecking for need to link with librt     :[0m [0m[32m[32mnot necessary[0m [0m
+[4.569s] [32m[0mChecking for feenableexcept              :[0m [0m[32m[32myes[0m [0m
+[4.570s] [32m[0mEnabling -Werror                         :[0m [0m[32m[32mno[0m [0m
+[4.570s] [32m[0mEnabled OpenDroneID                      :[0m [0m[32m[33mno[0m [0m
+[4.570s] [32m[0mEnabled firmware ID checking             :[0m [0m[32m[33mno[0m [0m
+[4.571s] [32m[0mGPS Debug Logging                        :[0m [0m[32m[33mno[0m [0m
+[4.571s] [32m[0mEnabled custom controller                :[0m [0m[32m[32myes[0m [0m
+[4.571s] [32m[0mEnabled DDS                              :[0m [0m[32m[32myes[0m [0m
+[4.829s] [32m[0mChecking for HAVE_CMATH_ISFINITE         :[0m [0m[32m[32myes[0m [0m
+[5.124s] [32m[0mChecking for HAVE_CMATH_ISINF            :[0m [0m[32m[32myes[0m [0m
+[5.388s] [32m[0mChecking for HAVE_CMATH_ISNAN            :[0m [0m[32m[32myes[0m [0m
+[5.665s] [32m[0mChecking for NEED_CMATH_ISFINITE_STD_NAMESPACE :[0m [0m[32m[32myes[0m [0m
+[5.918s] [32m[0mChecking for NEED_CMATH_ISINF_STD_NAMESPACE    :[0m [0m[32m[32myes[0m [0m
+[6.181s] [32m[0mChecking for NEED_CMATH_ISNAN_STD_NAMESPACE    :[0m [0m[32m[32myes[0m [0m
+[6.458s] [32m[0mChecking for header endian.h                   :[0m [0m[32m[32myes[0m [0m
+[6.708s] [32m[0mChecking for header byteswap.h                 :[0m [0m[32m[32myes[0m [0m
+[6.973s] [32m[0mChecking for HAVE_MEMRCHR                      :[0m [0m[32m[32myes[0m [0m
+[6.973s] [32m[0mConfigured VSCode Intellisense:                :[0m [0m[32m[33mno[0m [0m
+[6.976s] [32m[0mDC_DSDL compiler in                            :[0m [0m[32m[32m/home/javierbecerril/harmonic_ws/src/ardupilot/modules/DroneCAN/dronecan_dsdlc[0m [0m
+[6.976s] [32m[0mSource is git repository                       :[0m [0m[32m[32myes[0m [0m
+[6.976s] [32m[0mUpdate submodules                              :[0m [0m[32m[32myes[0m [0m
+[6.977s] [32m[0mChecking for program 'git'                     :[0m [0m[32m[32m/usr/bin/git[0m [0m
+[6.977s] [32m[0mLittlefs                                       :[0m [0m[32m[33mdisabled[0m [0m
+[6.978s] [32m[0mChecking for program 'size'                    :[0m [0m[32m[32m/usr/bin/size[0m [0m
+[6.978s] [32m[0mBenchmarks                                     :[0m [0m[32m[33mdisabled[0m [0m
+[6.978s] [32m[0mUnit tests                                     :[0m [0m[32m[32menabled[0m [0m
+[6.978s] [32m[0mScripting                                      :[0m [0m[32m[32mmaybe[0m [0m
+[7.406s] [32m[0mChecking for program 'microxrceddsgen'         :[0m [0m[32m[33mnot found[0m [0m
+[7.407s] [01;31mCould not find the program ['microxrceddsgen']
+[7.407s] (complete log in /home/javierbecerril/harmonic_ws/src/ardupilot/build/config.log)[0m
+[7.440s] gmake[2]: *** [CMakeFiles/ardupilot_configure.dir/build.make:70: CMakeFiles/ardupilot_configure] Error 1
+[7.440s] gmake[1]: *** [CMakeFiles/Makefile2:142: CMakeFiles/ardupilot_configure.dir/all] Error 2
+[7.440s] gmake: *** [Makefile:146: all] Error 2
+[7.442s] Invoked command in '/home/javierbecerril/harmonic_ws/build/ardupilot_sitl' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags:/home/javierbecerril/harmonic_ws/install/tag_hover_sim:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com LD_LIBRARY_PATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib:/usr/local/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/install/ardupilot_msgs/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/install/tag_hover_sim/lib/python3.12/site-packages:/home/javierbecerril/harmonic_ws/build/my-test-package:/home/javierbecerril/harmonic_ws/install/my-test-package/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/cmake --build /home/javierbecerril/harmonic_ws/build/ardupilot_sitl -- -j12 -l12

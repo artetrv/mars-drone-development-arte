@@ -1,0 +1,28 @@
+running egg_info
+writing ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/PKG-INFO
+writing dependency_links to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/dependency_links.txt
+writing entry points to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/entry_points.txt
+writing requirements to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/requires.txt
+writing top-level names to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/top_level.txt
+reading manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+writing manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+running build
+running build_py
+copying tag_hover_two_tags/tag_oscillator.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+running install
+running install_lib
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/tag_oscillator.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/tag_oscillator.py to tag_oscillator.cpython-312.pyc
+running install_data
+running install_egg_info
+removing '/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info
+running install_scripts
+Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_overlay script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+writing list of installed files to '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log'

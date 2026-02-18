@@ -6,8 +6,8 @@
 
 #include "ardupilot_msgs/srv/detail/mode_switch__struct.h"
 #include "rosidl_typesupport_interface/macros.h"
-#include "ardupilot_msgs/srv/detail/mode_switch__functions.h"
 #include "ardupilot_msgs/srv/detail/mode_switch__type_support.h"
+#include "ardupilot_msgs/srv/detail/mode_switch__functions.h"
 
 #ifdef __cplusplus
 extern "C"

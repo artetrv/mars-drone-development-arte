@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "rosidl_typesupport_interface/macros.h"
 #include "ardupilot_msgs/msg/detail/airspeed__type_support.h"
+#include "rosidl_typesupport_interface/macros.h"
 #include "ardupilot_msgs/msg/detail/airspeed__functions.h"
 #include "ardupilot_msgs/msg/detail/airspeed__struct.h"
 

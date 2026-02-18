@@ -1,0 +1,81 @@
+running develop
+Removing /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag-hover-two-tags.egg-link (link to .)
+running egg_info
+writing ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/PKG-INFO
+writing dependency_links to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/dependency_links.txt
+writing entry points to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/entry_points.txt
+writing requirements to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/requires.txt
+writing top-level names to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/top_level.txt
+reading manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+writing manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build
+creating /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib
+creating /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/__init__.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/tag_oscillator.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/tag_pose_selector.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/tag_overlay.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/apriltag_tf_broadcaster.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/apriltag_pnp_broadcaster.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+copying tag_hover_two_tags/relative_vibration_pose.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags
+running install
+running install_lib
+creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/__init__.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/tag_oscillator.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/tag_pose_selector.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/tag_overlay.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/apriltag_tf_broadcaster.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/apriltag_pnp_broadcaster.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_two_tags/relative_vibration_pose.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/tag_oscillator.py to tag_oscillator.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/tag_pose_selector.py to tag_pose_selector.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/tag_overlay.py to tag_overlay.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/apriltag_tf_broadcaster.py to apriltag_tf_broadcaster.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/apriltag_pnp_broadcaster.py to apriltag_pnp_broadcaster.cpython-312.pyc
+byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags/relative_vibration_pose.py to relative_vibration_pose.cpython-312.pyc
+running install_data
+copying resource/tag_hover_two_tags -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/ament_index/resource_index/packages
+copying package.xml -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags
+copying launch/hover_controller.launch.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/launch
+copying launch/sim_lockon_backbone.launch.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/launch
+copying launch/sim_vision_stack.launch.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/launch
+copying config/apriltag_params.yaml -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/config
+copying worlds/apriltag_two_tags.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/worlds
+copying worlds/testing_nodrone.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/worlds
+copying worlds/apriltag_test.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/worlds
+copying models/iris_with_standoffs/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs
+copying models/iris_with_standoffs/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs
+copying models/iris_with_standoffs/meshes/iris_prop_cw.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+copying models/iris_with_standoffs/meshes/iris.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+copying models/iris_with_standoffs/meshes/iris_prop_ccw.dae -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_standoffs/meshes
+copying models/Apriltag36_11_00001/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001
+copying models/Apriltag36_11_00001/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001
+copying models/Apriltag36_11_00001/materials/textures/tag36_11_00001.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures
+copying models/Apriltag36_11_00001/materials/textures/tag36_11_00001.png:Zone.Identifier -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/textures
+copying models/Apriltag36_11_00001/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/Apriltag36_11_00001/materials/scripts
+copying models/iris_with_rgb_camera/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_rgb_camera
+copying models/iris_with_rgb_camera/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/iris_with_rgb_camera
+copying models/apriltag_36h11_0/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0
+copying models/apriltag_36h11_0/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0
+copying models/apriltag_36h11_0/materials/textures/tag36h11_0.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/textures
+copying models/apriltag_36h11_0/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_0/materials/scripts
+copying models/apriltag_36h11_1/model.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1
+copying models/apriltag_36h11_1/model.config -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1
+copying models/apriltag_36h11_1/materials/textures/tag36h11_1.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures
+copying models/apriltag_36h11_1/materials/textures/tag36h11_0.png -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/textures
+copying models/apriltag_36h11_1/materials/scripts/Apriltag.material -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/models/apriltag_36h11_1/materials/scripts
+running install_egg_info
+Copying ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info
+running install_scripts
+Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_overlay script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+writing list of installed files to '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log'

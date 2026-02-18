@@ -1,5 +1,21 @@
 # PROGRESS LOG
 
+## 2026-02-16
+**Summary:**
+- Added `tag_oscillator.launch.py` and fixed `hover_yaw_search` entry-point imports in two-tag package.
+- Moved joint controller plugin inside the vibrating tag model and removed world-level joint state publisher.
+- Resized AprilTags to 5 inches (0.127 m) across two-tag models/world and updated detector `tag_size`.
+- Set controller default `target_distance` to 1.0 m in the stable `hover_yaw_search_v1`/`v2` variants.
+- Confirmed overlay command and diagnostics for image/detections/overlay topics.
+
+**Notes:**
+- Recommended controller for sim: `tag_hover_sim hover_yaw_search_v1`.
+- Ensure `GZ_SIM_RESOURCE_PATH` includes `src/tag_hover_two_tags/models` for tag textures.
+
+**Next Todos:**
+- [ ] Run full end-to-end two-tag sim (vision + oscillator + controller) after size change.
+- [ ] Verify CSV logging output and relative pose signal quality.
+
 ## 2026-01-08 (Continued)
 **Summary:**
 - Fixed environment setup: added `COLCON_IGNORE` to `drone-venv` to prevent colcon scanning errors.
@@ -48,6 +64,22 @@
 - [ ] Launch Terminal 5 (AprilTag Detector).
 - [ ] Launch Terminal 6 (AprilTag TF Broadcaster).
 - [ ] Launch Terminal 7 (AprilTag PnP Broadcaster).
+
+## 2026-01-28 (3-Phase Hybrid Controller)
+**Status:** ✅ IMPLEMENTATION COMPLETE
+
+Implemented `hover_yaw_search_sensor_lock.py` (431 lines) — 3-phase supervisory state machine for hardware deployment.
+
+**Phases:**
+- **Phase 1 (ALIGN):** Continuous P-control (yaw, distance, lateral, vertical). Entry: tag found. Exit: tag in box for 2.0s.
+- **Phase 2 (HOVER_BOX):** Event-based bounding box (zero velocity inside, corrections outside). Box: ±0.25m lateral, ±0.30m distance, ±0.08rad yaw.
+- **Phase 3 (SENSOR_HOVER):** Silent handoff (no velocity commands). FCU holds via optical flow + rangefinder. Duration: indefinite until tag lost.
+
+**Key Features:** ControlPhase enum (4 states), equilibrium dwell timers, tag loss fallback, comprehensive logging ([STATE], [EQUILIBRIUM] tags).
+
+**Launch:** `ros2 run tag_hover_sim hover_yaw_search_sensor_lock`
+
+**Ready for:** Raspberry Pi 5 + Pixhawk optical flow deployment.
 - [ ] Verify full system integration and test arm/takeoff/SEARCH→LOCK modes.
  - [ ] Tune `lock_k_yaw` and `search_yaw` as needed.
 

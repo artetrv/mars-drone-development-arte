@@ -1,0 +1,59 @@
+[1.089s] Invoking command in '/home/javierbecerril/harmonic_ws/src/tag_hover_two_tags': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_two_tags build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log --single-version-externally-managed install_data
+[1.414s] running egg_info
+[1.433s] writing ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/PKG-INFO
+[1.433s] writing dependency_links to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/dependency_links.txt
+[1.434s] writing entry points to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/entry_points.txt
+[1.434s] writing requirements to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/requires.txt
+[1.434s] writing top-level names to ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/top_level.txt
+[1.482s] reading manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+[1.483s] writing manifest file '../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info/SOURCES.txt'
+[1.484s] running build
+[1.484s] running build_py
+[1.485s] creating /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_controller
+[1.485s] copying tag_hover_controller/__init__.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_controller
+[1.485s] copying tag_hover_controller/hover_yaw_search.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_controller
+[1.485s] creating /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.486s] copying tag_hover_sim/hover_yaw_search_v2.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.487s] copying tag_hover_sim/__init__.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.487s] copying tag_hover_sim/hover_yaw_search_v1.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.489s] copying tag_hover_sim/hover_yaw_search_sensor_lock.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.489s] copying tag_hover_sim/hover_yaw_search.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.490s] copying tag_hover_sim/apriltag_tf_broadcaster.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.490s] copying tag_hover_sim/apriltag_pnp_broadcaster.py -> /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim
+[1.492s] running install
+[1.497s] running install_lib
+[1.524s] creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.524s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/hover_yaw_search_v2.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.525s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/__init__.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.525s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/hover_yaw_search_v1.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.525s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/hover_yaw_search_sensor_lock.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.525s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/hover_yaw_search.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.526s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/apriltag_tf_broadcaster.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.526s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_sim/apriltag_pnp_broadcaster.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim
+[1.526s] creating /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_controller
+[1.527s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_controller/__init__.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_controller
+[1.527s] copying /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build/lib/tag_hover_controller/hover_yaw_search.py -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_controller
+[1.528s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/hover_yaw_search_v2.py to hover_yaw_search_v2.cpython-312.pyc
+[1.533s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/__init__.py to __init__.cpython-312.pyc
+[1.534s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/hover_yaw_search_v1.py to hover_yaw_search_v1.cpython-312.pyc
+[1.537s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/hover_yaw_search_sensor_lock.py to hover_yaw_search_sensor_lock.cpython-312.pyc
+[1.544s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/hover_yaw_search.py to hover_yaw_search.cpython-312.pyc
+[1.544s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/apriltag_tf_broadcaster.py to apriltag_tf_broadcaster.cpython-312.pyc
+[1.546s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_sim/apriltag_pnp_broadcaster.py to apriltag_pnp_broadcaster.cpython-312.pyc
+[1.548s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_controller/__init__.py to __init__.cpython-312.pyc
+[1.548s] byte-compiling /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_controller/hover_yaw_search.py to hover_yaw_search.cpython-312.pyc
+[1.550s] running install_data
+[1.551s] copying worlds/apriltag_two_tags.sdf -> /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/share/tag_hover_two_tags/worlds
+[1.552s] running install_egg_info
+[1.575s] removing '/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info' (and everything under it)
+[1.575s] Copying ../../build/tag_hover_two_tags/tag_hover_two_tags.egg-info to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages/tag_hover_two_tags-0.1.0-py3.12.egg-info
+[1.577s] running install_scripts
+[1.725s] Installing apriltag_pnp_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.725s] Installing apriltag_tf_broadcaster script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.728s] Installing hover_yaw_search script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.728s] Installing relative_vibration_pose script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.728s] Installing tag_oscillator script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.728s] Installing tag_overlay script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.729s] Installing tag_pose_selector script to /home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/tag_hover_two_tags
+[1.729s] writing list of installed files to '/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log'
+[1.774s] Invoked command in '/home/javierbecerril/harmonic_ws/src/tag_hover_two_tags' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(venv-ardupilot) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/javierbecerril/harmonic_ws/install/tag_hover_two_tags/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tag_hover_two_tags build --build-base /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/build install --record /home/javierbecerril/harmonic_ws/build/tag_hover_two_tags/install.log --single-version-externally-managed install_data

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="no_drone_test">
+    <gravity>0 0 -9.81</gravity>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://iris_with_ardupilot</uri>
+      <name>iris_with_ardupilot</name>
+      <pose>0 0 0.2 0 0 0</pose>
+    </include>
+  </world>
+</sdf>
+
+
+

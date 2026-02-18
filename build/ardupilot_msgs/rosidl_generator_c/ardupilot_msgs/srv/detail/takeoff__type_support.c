@@ -4,10 +4,10 @@
 
 #include <string.h>
 
-#include "ardupilot_msgs/srv/detail/takeoff__type_support.h"
 #include "rosidl_typesupport_interface/macros.h"
-#include "ardupilot_msgs/srv/detail/takeoff__struct.h"
+#include "ardupilot_msgs/srv/detail/takeoff__type_support.h"
 #include "ardupilot_msgs/srv/detail/takeoff__functions.h"
+#include "ardupilot_msgs/srv/detail/takeoff__struct.h"
 
 #ifdef __cplusplus
 extern "C"

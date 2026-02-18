@@ -45,6 +45,19 @@ Location: `src/tag_hover_sim/`
 
 ---
 
+## New experiment: Two-Tag Relative Pose Measurement
+Location: `src/tag_hover_two_tags/`
+
+- Purpose: Measure vibration/relative motion by differencing two AprilTag poses (reference + vibrating tag).
+- Key files:
+  - `launch/sim_vision_stack.launch.py` — Gazebo + camera bridge + AprilTag detector + pose selectors.
+  - `launch/sim_lockon_backbone.launch.py` — Relative pose estimator + CSV logger.
+  - `worlds/apriltag_two_tags.sdf` — Two-tag test world.
+  - `tag_hover_two_tags/relative_vibration_pose.py` — Relative transform + logging.
+- Topics: `/apriltag_ref/pose`, `/apriltag_vib/pose`, `/relative_vibration_pose`.
+
+---
+
 ## Future pattern: per-project docs
 Each project directory should carry a brief guide (like `docs/LOCKON_NOTES.md`) covering:
 - Purpose and expected behavior.  

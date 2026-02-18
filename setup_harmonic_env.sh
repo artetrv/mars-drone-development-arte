@@ -20,7 +20,7 @@ unset IGN_GAZEBO_SYSTEM_PLUGIN_PATH
 #export GZ_SIM_RESOURCE_PATH=$HOME/harmonic_ws/src/ardupilot_gazebo/models:$HOME/harmonic_ws/src/ardupilot_gazebo/worlds:$GZ_SIM_RESOURCE_PATH
 
 # Models + worlds (order matters: custom → upstream → cache → system)
-export GZ_SIM_RESOURCE_PATH="$HOME/harmonic_ws/src/tag_hover_sim/models:$HOME/harmonic_ws/src/tag_hover_sim/worlds:$HOME/harmonic_ws/install/ardupilot_gazebo/share/ardupilot_gazebo/models:$HOME/harmonic_ws/install/ardupilot_gazebo/share/ardupilot_gazebo/worlds:$HOME/.gz/models:/opt/ros/jazzy/share"
+export GZ_SIM_RESOURCE_PATH="$HOME/harmonic_ws/src/tag_hover_two_tags/models:$HOME/harmonic_ws/src/tag_hover_sim/models:$HOME/harmonic_ws/src/tag_hover_sim/worlds:$HOME/harmonic_ws/install/ardupilot_gazebo/share/ardupilot_gazebo/models:$HOME/harmonic_ws/install/ardupilot_gazebo/share/ardupilot_gazebo/worlds:$HOME/.gz/models:/opt/ros/jazzy/share"
 
 # ArduPilot Gazebo system plugins
 export GZ_SIM_SYSTEM_PLUGIN_PATH="$HOME/harmonic_ws/install/ardupilot_gazebo/lib/ardupilot_gazebo"

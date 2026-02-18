@@ -1,0 +1,8 @@
+[console_scripts]
+apriltag_pnp_broadcaster = tag_hover_two_tags.apriltag_pnp_broadcaster:main
+apriltag_tf_broadcaster = tag_hover_two_tags.apriltag_tf_broadcaster:main
+hover_yaw_search = tag_hover_controller.hover_yaw_search:main
+relative_vibration_pose = tag_hover_two_tags.relative_vibration_pose:main
+tag_oscillator = tag_hover_two_tags.tag_oscillator:main
+tag_overlay = tag_hover_two_tags.tag_overlay:main
+tag_pose_selector = tag_hover_two_tags.tag_pose_selector:main

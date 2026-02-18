@@ -60,6 +60,45 @@ ros2 service call /mavros/cmd/arming mavros_msgs/srv/CommandBool "{value: true}"
 ros2 service call /mavros/cmd/takeoff mavros_msgs/srv/CommandTOL "{min_pitch: 0.0, yaw: 0.0, latitude: 0.0, longitude: 0.0, altitude: 5.0}"
 ```
 
+## 3-Phase Hybrid Controller (Hardware Ready)
+
+### State Machine (SENSOR_LOCK)
+```
+SEARCH → ALIGN → HOVER_BOX → SENSOR_HOVER
+(any) ←──────────────────────────────────
+      tag lost (fallback)
+```
+
+### Launch
+```bash
+ros2 run tag_hover_sim hover_yaw_search_sensor_lock
+```
+
+### Expected Behavior
+```
+[STATE] SEARCH → ALIGN (tag detected at 2.34m)
+[EQUILIBRIUM] Timer started
+[EQUILIBRIUM] In box: 1.23s / 2.00s
+[STATE] ALIGN → HOVER_BOX (equilibrium reached)
+[EQUILIBRIUM] Dwell: 1.50s / 2.00s
+[STATE] HOVER_BOX → SENSOR_HOVER (silent handoff)
+SENSOR_HOVER (silent) | tag at 2.00m  ← No velocity commands published
+```
+
+### Key Parameters
+| Parameter | Default | Purpose |
+|-----------|---------|---------|
+| lock_k_yaw | 0.1 | P gain for yaw |
+| lock_k_distance | 0.2 | P gain for forward/back |
+| lock_k_lateral | 0.1 | P gain for left/right |
+| target_distance | 2.0 m | Desired standoff |
+| lateral_box_m | 0.25 m | ±tolerance (left/right) |
+| distance_box_m | 0.30 m | ±tolerance (forward/back) |
+| yaw_box_rad | 0.08 rad | ±tolerance (yaw ~4.6°) |
+| equilibrium_time_s | 2.0 s | Dwell timer per transition |
+
+Tune at runtime: `ros2 param set /hover_yaw_search lock_k_yaw 0.08`
+
 ## Common warnings
 - `AUTOPILOT_VERSION`/time jump warnings: typically benign; wait a few seconds after startup.
 - Multiple MAVROS instances cause crashes; ensure only one per ROS domain (or use unique node names/namespaces).

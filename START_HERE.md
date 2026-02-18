@@ -15,8 +15,10 @@ Goal: Single entrypoint for this repo, with pointers into per-project docs.
 
 ## Repo overview (docs/)
 - `docs/PROGRESS_LOG.md` — Session-by-session work log with dates, summaries, and next todos.
+- `docs/TWO_TAG_PROGRESS.md` — Two-tag stack progress log (package-specific).
 - `docs/ALL_WORK_SUMMARY.md` — Narrative of recent work and status.
 - `docs/LOCKON_NOTES.md` — AprilTag hover/yaw-search integration notes (Gazebo + ArduPilot SITL).
+- `docs/TWO_TAG_NOTES.md` — Two-tag measurement notes (Gazebo + AprilTag pipeline).
 - `docs/ardupilot_setup.md` — ArduPilot SITL install + plugin setup for Harmonic.
 - `docs/flight_guide.md` — How to fly (arming, modes, expected warnings).
 - `docs/code_index.md` — Map of packages, launch files, nodes, worlds, topics.
@@ -86,6 +88,7 @@ ros2 param set /hover_yaw_search mode LOCK
 
 ## Where to read next
 - Tag Hover Sim details: `docs/LOCKON_NOTES.md`  
+- Two-tag measurement details: `docs/TWO_TAG_NOTES.md`
 - Setup: `docs/ardupilot_setup.md`  
 - Flying: `docs/flight_guide.md`  
 - Code map: `docs/code_index.md`  

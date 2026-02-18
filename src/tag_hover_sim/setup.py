@@ -18,6 +18,9 @@ setup(
         # Install config files
         (os.path.join('share', package_name, 'config'),
             glob('config/*.yaml')),
+        # Install world files
+        (os.path.join('share', package_name, 'worlds'),
+            glob('worlds/*.sdf')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -30,6 +33,8 @@ setup(
         'console_scripts': [
             'hover_yaw_search = tag_hover_sim.hover_yaw_search:main',
             'hover_yaw_search_v1 = tag_hover_sim.hover_yaw_search_v1:main',
+            'hover_yaw_search_v2 = tag_hover_sim.hover_yaw_search_v2:main',
+            'hover_yaw_search_sensor_lock = tag_hover_sim.hover_yaw_search_sensor_lock:main',
             'apriltag_tf_broadcaster = tag_hover_sim.apriltag_tf_broadcaster:main',
             'apriltag_pnp_broadcaster = tag_hover_sim.apriltag_pnp_broadcaster:main'
         ],

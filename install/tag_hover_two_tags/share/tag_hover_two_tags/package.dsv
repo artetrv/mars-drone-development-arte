@@ -1,0 +1,6 @@
+source;share/tag_hover_two_tags/hook/pythonpath.ps1
+source;share/tag_hover_two_tags/hook/pythonpath.dsv
+source;share/tag_hover_two_tags/hook/pythonpath.sh
+source;share/tag_hover_two_tags/hook/ament_prefix_path.ps1
+source;share/tag_hover_two_tags/hook/ament_prefix_path.dsv
+source;share/tag_hover_two_tags/hook/ament_prefix_path.sh
