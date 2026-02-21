@@ -24,14 +24,15 @@ Last updated: 2025-12-20.
   - `gimbal_small_3d_fixed` — Locked-joint gimbal used by the RGB model.
 - `worlds/`
   - `apriltag_test.sdf`, `testing_nodrone.sdf` — Local test worlds.
-- `tag_hover_sim/` (Controllers)
-  - `hover_yaw_search.py` — Reference implementation (SEARCH/LOCK).
-  - `hover_yaw_search_v2.py` — Phase 1 (ALIGN) template.
-  - `hover_yaw_search_sensor_lock.py` — **3-phase hybrid (recommended for hardware)**. Phases: SEARCH → ALIGN → HOVER_BOX → SENSOR_HOVER.
-  - `apriltag_pnp_broadcaster.py`, `tag_overlay.py` — Helpers (TF, debug).
-- Docs: `README.md`, `QUICK_REFERENCE.md`, `PACKAGE_SUMMARY.md`, plus repo-level `LOCKON_NOTES.md`.
-- Key topics: `/camera/image_raw`, `/camera/camera_info`, `/detections`, `/tf` (camera -> tag36h11:0), `/mavros/state`, `/mavros/setpoint_velocity/cmd_vel_unstamped`, `/hover_yaw_cmd`.
-- Controllers: `hover_yaw_search` (v1 ref), `hover_yaw_search_v2` (Phase 1), `hover_yaw_search_sensor_lock` (3-phase hybrid).
+- `tag_hover_sim/` (Controllers and helpers)
+  - `hover_yaw_search_v1.py` — **Frozen stable baseline** (camera-frame IBVS, do not edit).
+  - `hover_yaw_search.py` — Development version (v2, active improvements).
+  - `hover_yaw_search_v2.py` — Phase-1 ALIGN template.
+  - `hover_yaw_search_sensor_lock.py` — **3-phase hybrid (hardware target)**. Phases: SEARCH → ALIGN → HOVER_BOX → SENSOR_HOVER.
+  - `apriltag_pnp_broadcaster.py` — PnP TF broadcaster (canonical source for all packages).
+  - `apriltag_tf_broadcaster.py` — Direct TF broadcaster from /detections.
+- Docs: `README.md`, `QUICK_REFERENCE.md`, `PROJECT_CONTEXT.md`, `CONTROLLER_DEV_NOTES.md`.
+- Key topics: `/camera/image_raw`, `/camera/camera_info`, `/detections`, `/tf` (camera → tag36h11:0), `/mavros/state`, `/mavros/setpoint_velocity/cmd_vel_unstamped`, `/hover_yaw_cmd`.
 
 ### tag_hover_two_tags
 - `package.xml` — ROS 2 package manifest.
@@ -87,23 +88,22 @@ Last updated: 2025-12-20.
   ```
 
 ## Reminders
-- Only one MAVROS per ROS domain; if starting separately, use unique `__node`/`namespace` or disable the one in `sim_lockon_backbone.launch.py`.
-- ArduPilot SITL common ports: out 14550, listen 14555 (adjust if different).
-- `/mission/new_target` (PointStamped) → follower_offboard_node
-- `/uav2/mavros/setpoint_position/local` (PoseStamped) → MAVROS → PX4
-- `/uav2/mavros/state` (State) ← MAVROS ← PX4
-- Cameras via ros_gz_bridge:
-  - `/uav1/camera/image_raw`, `/uav2/camera/image_raw` (+ camera_info)
-  - Perception publishes `/uavX/perception/target`
+- Only one MAVROS per ROS domain — duplicate causes allocator crash.
+- ArduPilot SITL: must use `--out=127.0.0.1:14550 --out=127.0.0.1:14555` for MAVLink to reach MAVROS.
+- Camera bridge: use full scoped Gazebo model path with `--ros-args -r` remapping (simple bridge does not work).
+- `camera_frame` parameter must match exactly across PnP broadcaster and controller.
+- `GZ_SIM_RESOURCE_PATH` must include `src/tag_hover_sim/models` and `src/ardupilot_gazebo/models`.
+- ArduPilot SITL lives at `src/ardupilot/`; activate `drone-venv/` before running `sim_vehicle.py`.
 
-## Running
-1) Build and source:
-- `cd ~/harmonic_ws` → `colcon build --symlink-install` → `source install/setup.bash`
-2) Bringup (Harmonic): prefer `bringup_with_cameras.launch.py` (verify gz version aligns with Harmonic)
-3) Start MAVROS (if not started by combined launch): `mavros_two_uav.launch.py`
-4) Start mission: `demo_mission.launch.py`
+## Build and run
+```bash
+# Build all packages
+cd ~/harmonic_ws
+colcon build --symlink-install
+source install/setup.bash
 
-## Known gaps / next steps
-- All docs now aligned to Gazebo Harmonic (LTS). Garden references removed.
-- Harden MAVROS bringup with a wait-for-port utility instead of fixed sleep (already present in `bringup_with_cameras.launch.py`)
-- Optionally add compressed image transport and evaluate TFLite/ONNX for perception
+# Build single package
+colcon build --packages-select tag_hover_sim --symlink-install
+
+# Full bringup: see QUICK_REFERENCE.md in each package
+```

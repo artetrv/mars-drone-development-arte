@@ -1,5 +1,19 @@
 # PROGRESS LOG
 
+## 2026-02-16 (tag_hover_two_tags)
+**Summary:**
+- Added `hover_yaw_search` controller to `setup.py` entry points (now callable as console script).
+- Created `hover_controller.launch.py` for easy controller bringup with configurable parameters.
+- Documented 3 launch patterns in QUICK_REFERENCE.md: 2-terminal (measurement only), 5-terminal (SITL + MAVROS + controller), 7-9 terminal debug split.
+- Controller is now fully integrated into the package.
+
+**Next Todos:**
+- [ ] Build: `colcon build --packages-select tag_hover_two_tags`
+- [ ] Run end-to-end sim: oscillator + vision stack + relative pose + CSV verification.
+- [ ] Verify CSV logging and relative pose signal quality after tag resize to 0.127 m.
+
+---
+
 ## 2026-02-16
 **Summary:**
 - Added `tag_oscillator.launch.py` and fixed `hover_yaw_search` entry-point imports in two-tag package.

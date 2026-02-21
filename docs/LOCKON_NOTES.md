@@ -91,6 +91,44 @@ Two patterns are supported:
 
 Avoid running a second MAVROS in the same ROS domain. If you need to, give it a unique `__node` and `namespace`. Typical ArduPilot SITL ports: listen 14555, send 14550; use `fcu_url:=udp://:14555@127.0.0.1:14550`.
 
+## 3-Phase Hybrid Controller (hover_yaw_search_sensor_lock)
+
+For hardware deployment, use `hover_yaw_search_sensor_lock` instead of v1. It adds a supervisory state machine on top of the same IBVS logic.
+
+### State machine
+```
+SEARCH → ALIGN → HOVER_BOX → SENSOR_HOVER
+  ↑_____________tag lost (any state)____________|
+```
+- **SEARCH:** Constant yaw rotation until tag detected → auto-enters ALIGN.
+- **ALIGN:** Continuous 4-DOF P-control (yaw + distance + lateral + vertical). Exits when tag stays in equilibrium box for `equilibrium_time_s`.
+- **HOVER_BOX:** Event-based corrections (zero velocity inside box, P-control outside). Exits when equilibrium sustained again.
+- **SENSOR_HOVER:** Silent — zero velocity commands. FCU holds position via optical flow + rangefinder. Re-enters ALIGN if tag lost.
+
+### Key parameters
+| Parameter | Default | Purpose |
+|---|---|---|
+| `lock_k_yaw` | 0.1 | P gain for yaw |
+| `lock_k_distance` | 0.2 | P gain for forward/back |
+| `lock_k_lateral` | 0.1 | P gain for left/right |
+| `target_distance` | 2.0 m | Desired standoff |
+| `lateral_box_m` | 0.25 m | ±tolerance (left/right) |
+| `distance_box_m` | 0.30 m | ±tolerance (forward/back) |
+| `yaw_box_rad` | 0.08 rad | ±tolerance (~4.6°) |
+| `equilibrium_time_s` | 2.0 s | Dwell timer per transition |
+
+Tune at runtime: `ros2 param set /hover_yaw_search_sensor_lock lock_k_yaw 0.08`
+
+### Expected log output
+```
+[STATE] SEARCH → ALIGN (tag detected at 2.34m)
+[EQUILIBRIUM] Timer started
+[EQUILIBRIUM] In box: 1.23s / 2.00s
+[STATE] ALIGN → HOVER_BOX (equilibrium reached)
+[STATE] HOVER_BOX → SENSOR_HOVER (silent handoff)
+SENSOR_HOVER (silent) | tag at 2.00m
+```
+
 ## Common Issues
 - MAVROS crash “existing topic name … incompatible type”: typically caused by duplicate names/namespaces (or double-prefix remaps) leading to the same topic being created twice with different types. Fix: kill stale `mavros_node`, ensure a single instance, and avoid double-prefixing (__ns plus manual remaps).
 - Time jump warnings: benign; set `use_sim_time:=true` if using `/clock`.- **Controller drift/oscillation (FIXED)**: Early versions used gated control (only commanded forward/lateral when yaw aligned). This caused bang-bang motion and drift. Current version uses continuous 4-DOF relative pose regulation - all control loops run simultaneously without gating for smooth convergence.

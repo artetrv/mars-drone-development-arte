@@ -5,3 +5,8 @@ geometry-msgs
 sensor-msgs
 std-msgs
 tf2-ros
+# video_vibration_analyzer offline tool
+pupil-apriltags
+scipy
+matplotlib
+pyyaml

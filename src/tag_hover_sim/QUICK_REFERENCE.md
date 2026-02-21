@@ -1,150 +1,156 @@
-# Simulation Quick Reference
+# tag_hover_sim — Quick Reference
 
-## Terminal Layout (3 terminals)
+All commands use the correct working configuration from `docs/LOCKON_NOTES.md`.
 
-### Terminal 1: Gazebo Harmonic
+## Environment (source in every new terminal)
+
 ```bash
-gz sim drone_apriltag_world.sdf
+cd ~/harmonic_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+source setup_harmonic_env.sh   # sets up Gazebo env vars
 ```
 
-### Terminal 2: ArduPilot SITL
+---
+
+## Standard Bringup (7 terminals)
+
+### Terminal 1 — ArduPilot SITL
 ```bash
-cd ~/ardupilot/ArduCopter
-../Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --console --map
+cd ~/harmonic_ws/src/ardupilot
+source ../../drone-venv/bin/activate
+./Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --map --console \
+  --out=127.0.0.1:14550 --out=127.0.0.1:14555
+```
+MAVProxy console opens here. Use it to arm/takeoff (see below).
+
+### Terminal 2 — Gazebo
+```bash
+cd ~/harmonic_ws
+source setup_harmonic_env.sh
+export GZ_SIM_RESOURCE_PATH=$(pwd)/src/tag_hover_sim/models:$(pwd)/src/ardupilot_gazebo/models
+gz sim -r src/tag_hover_sim/worlds/apriltag_test.sdf
 ```
 
-Once SITL is ready, arm and takeoff:
+### Terminal 3 — Camera bridge
+```bash
+cd ~/harmonic_ws && source setup_harmonic_env.sh
+ros2 run ros_gz_bridge parameter_bridge \
+  /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/image@sensor_msgs/msg/Image@gz.msgs.Image \
+  /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo \
+  --ros-args \
+  -r /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/image:=/camera/image_raw \
+  -r /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/camera_info:=/camera/camera_info
+```
+Verify: `ros2 topic hz /camera/image_raw` → ~6-7 Hz
+
+### Terminal 4 — MAVROS
+```bash
+cd ~/harmonic_ws && source setup_harmonic_env.sh
+ros2 launch mavros apm.launch fcu_url:=udp://:14555@127.0.0.1:14550
+```
+
+### Terminal 5 — AprilTag detector
+```bash
+cd ~/harmonic_ws && source setup_harmonic_env.sh
+ros2 run apriltag_ros apriltag_node --ros-args \
+  -r image_rect:=/camera/image_raw \
+  -r camera_info:=/camera/camera_info \
+  --params-file ~/harmonic_ws/src/tag_hover_sim/config/apriltag_params.yaml
+```
+
+### Terminal 6 — PnP TF broadcaster
+```bash
+cd ~/harmonic_ws && source setup_harmonic_env.sh
+ros2 run tag_hover_sim apriltag_pnp_broadcaster --ros-args \
+  -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+  -p detections_topic:=/detections
+```
+
+### Terminal 7 — Controller (stable baseline v1)
+```bash
+cd ~/harmonic_ws && source setup_harmonic_env.sh
+ros2 run tag_hover_sim hover_yaw_search_v1 \
+  --ros-args \
+  -p body_frame:=base_link \
+  -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+  -p mavros_prefix:=/mavros \
+  -p mode:=SEARCH \
+  -p rate_hz:=20.0 \
+  -p search_yaw:=0.25 \
+  -p lock_k_yaw:=0.1 \
+  -p max_yaw_rate:=0.6 \
+  -p target_distance:=1.0 \
+  -p mavros_wait_timeout:=10.0
+```
+
+---
+
+## Arm and fly (MAVProxy console — Terminal 1)
+
 ```
 mode GUIDED
 arm throttle
-takeoff 2
+takeoff 5
 ```
 
-### Terminal 3: ROS 2 Stack
+Drone spins in SEARCH → auto-locks when tag enters view.
+
+---
+
+## Quick checks
+
 ```bash
-source /opt/ros/jazzy/setup.bash
-source ~/harmonic_ws/install/setup.bash
+# Camera publishing?
+ros2 topic hz /camera/image_raw
 
-# SEARCH mode (default)
-ros2 launch tag_hover_sim sim_lockon_backbone.launch.py
+# Tag detected?
+ros2 topic echo /detections --no-arr
 
-# LOCK mode
-ros2 launch tag_hover_sim sim_lockon_backbone.launch.py mode:=LOCK
-```
+# TF camera → tag?
+ros2 run tf2_ros tf2_echo iris_with_rgb_camera/gimbal/pitch_link/camera tag36h11:0
 
-## Runtime Commands
+# MAVROS connected?
+ros2 topic echo /mavros/state --once
 
-### Switch controller mode (Terminal 4)
-```bash
-# Switch to LOCK mode
-ros2 param set /hover_yaw_search mode LOCK
-
-# Switch back to SEARCH mode
-ros2 param set /hover_yaw_search mode SEARCH
-```
-
-### Check topics
-```bash
-ros2 topic list
-ros2 topic hz /image_raw
-ros2 topic echo /detections
-ros2 topic echo /mavros/state
+# Controller output?
 ros2 topic echo /hover_yaw_cmd
 ```
 
-### Check TF
-```bash
-# See all TF frames
-ros2 run tf2_tools view_frames
+---
 
-# Monitor camera → tag transform
-ros2 run tf2_ros tf2_echo camera tag36h11:0
-```
-
-### Visualize in RViz
-```bash
-rviz2
-# Add TF display, set fixed frame to 'camera'
-```
-## Terminal Layout (matches real hardware workflow)
-- Controller publishes constant yaw rate: `angular.z ≈ 0.25 rad/s`
-### Terminal 1: Gazebo Harmonic (SIM ONLY - replaces physical drone)
-```bash
-gz sim drone_apriltag_world.sdf
-```
-- Drone rotates continuously looking for tag
-### Terminal 2: Camera Bridge (SIM ONLY - replaces Intel RealSense D455 v4l2 camera node)
-```bash
-source ~/harmonic_ws/install/setup.bash
-# CRITICAL: Gazebo SDF camera MUST be 1280×720 @ 30 FPS to match hardware
-ros2 run ros_gz_bridge parameter_bridge /camera@sensor_msgs/msg/Image@gz.msgs.Image \
-  --ros-args -r /camera:=/image_raw
-ros2 run ros_gz_bridge parameter_bridge /camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo
-```
-- No dependency on TF
-### Terminal 3: AprilTag Detector (IDENTICAL to real hardware)
-```bash
-source ~/harmonic_ws/install/setup.bash
-ros2 run apriltag_ros apriltag_node \
-	--ros-args -p image_rect:=/image_raw -p camera_info:=/camera_info \
-	--params-file ~/harmonic_ws/src/tag_hover_sim/config/apriltag_params.yaml
-```
-
-### Terminal 4: PnP TF Broadcaster (IDENTICAL to real hardware)
-```bash
-python3 ~/apriltag_pnp_broadcaster.py
-# Or wherever your PnP broadcaster script is located
-```
-### LOCK Mode
-### Terminal 5: ArduPilot SITL (SIM ONLY - replaces Pixhawk)
-```bash
-cd ~/ardupilot/ArduCopter
-../Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --console --map
-```
-- Controller computes yaw error from TF `camera → tag36h11:0`
-Once SITL is ready, arm and takeoff:
-```
-mode GUIDED
-arm throttle
-takeoff 2
-```
-- Yaw error = `atan2(tag_x, tag_z)` (angular offset in camera frame)
-### Terminal 6: MAVROS + Controller (IDENTICAL structure to real hardware)
-```bash
-source ~/harmonic_ws/install/setup.bash
-- Controller applies P gain: `yaw_cmd = lock_k_yaw * yaw_error`
-# SEARCH mode (default)
-ros2 launch tag_hover_sim sim_lockon_backbone.launch.py
-- Drone adjusts yaw to center tag (yaw error → 0)
-# LOCK mode
-ros2 launch tag_hover_sim sim_lockon_backbone.launch.py mode:=LOCK
-```
-- Falls back to SEARCH if TF is unavailable
-
-## Troubleshooting One-Liners
+## Runtime tuning
 
 ```bash
-# Is Gazebo camera publishing?
-ros2 topic hz /image_raw
+# Switch to LOCK manually
+ros2 param set /hover_yaw_search mode LOCK
 
-# Is AprilTag detector running?
-ros2 node list | grep apriltag
-
-# Is MAVROS connected?
-ros2 topic echo /mavros/state | grep connected
-
-# Is TF available?
-ros2 run tf2_ros tf2_echo camera tag36h11:0
-
-# What's the controller commanding?
-ros2 topic echo /mavros/setpoint_velocity/cmd_vel_unstamped
-
-# SITL listening on UDP?
-netstat -an | grep 14540
+# Tune yaw gain at runtime
+ros2 param set /hover_yaw_search lock_k_yaw 0.08
 ```
 
-## Shutdown Sequence
+---
 
-1. Ctrl+C in Terminal 3 (ROS 2 stack)
-2. In Terminal 2 MAVProxy: `disarm` → `exit`
-3. Close Gazebo (Terminal 1)
+## 3-phase hardware controller (sensor_lock)
+
+Replace Terminal 7 with:
+```bash
+ros2 run tag_hover_sim hover_yaw_search_sensor_lock \
+  --ros-args \
+  -p body_frame:=base_link \
+  -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
+  -p mavros_prefix:=/mavros \
+  -p mode:=SEARCH \
+  -p rate_hz:=20.0 \
+  -p target_distance:=1.0
+```
+See `docs/LOCKON_NOTES.md` for state machine details and equilibrium parameters.
+
+---
+
+## Shutdown
+
+1. `disarm` in MAVProxy console
+2. Ctrl+C all ROS terminals
+3. Close Gazebo
+4. Exit SITL (`exit` in MAVProxy)

@@ -199,6 +199,68 @@ ros2 run tag_hover_sim hover_yaw_search_v1 --ros-args \
 
 ---
 
+## Offline Video Vibration Analysis
+
+Use `video_vibration_analyzer` to analyse a pre-recorded MP4 of a drone hovering in front of a vibrating structure.
+Two AprilTag 36h11 markers must be visible: one stationary (reference) and one on the vibrating structure.
+
+### Install dependencies (once)
+```bash
+pip install pupil-apriltags opencv-python numpy scipy matplotlib pyyaml
+# or, from the tools directory:
+pip install -r ~/harmonic_ws/tools/requirements.txt
+```
+
+### Standalone (from tools/)
+```bash
+python3 ~/harmonic_ws/tools/video_vibration_analyzer.py recording.mp4 \
+    --calibration camera.yaml \
+    --tag-size 0.127 \
+    --ref-id 0 --vib-id 1 \
+    --output-dir results/
+```
+
+### Via ROS console script (after `colcon build`)
+```bash
+ros2 run tag_hover_two_tags video_vibration_analyzer recording.mp4 \
+    --calibration camera.yaml \
+    --tag-size 0.127 \
+    --ref-id 0 --vib-id 1 \
+    --output-dir results/
+```
+
+### Key options
+| Option | Default | Notes |
+|---|---|---|
+| `--tag-size` | — | Physical side length in metres (required) |
+| `--ref-id` | 0 | Tag ID of the stationary reference tag |
+| `--vib-id` | 1 | Tag ID of the vibrating structure tag |
+| `--window-sec` | 2.0 | Sliding-window width for Hz-over-time analysis |
+| `--max-reproj-error` | 8.0 | Increase to 12–15 for blurry/small tags |
+| `--quad-decimate` | 1.0 | 1.0 = full resolution (best for small tags) |
+| `--annotated-video` | off | Save video with tag outlines drawn on it |
+| `--no-plots` | off | Skip PNG plots; only CSV output |
+
+### Outputs (saved in `--output-dir`, named from video stem)
+| File | Contents |
+|---|---|
+| `<stem>_vibration.csv` | Per-frame: time, x, y, z, roll, pitch, yaw, detection flags |
+| `<stem>_displacement.png` | X/Y/Z displacement (mm) over time with RMS annotation |
+| `<stem>_frequency.png` | Dominant Hz over time (scatter) + spectrogram |
+| `<stem>_annotated.mp4` | Video with tag outlines (only if `--annotated-video` set) |
+
+### Camera calibration YAML
+Accepts ROS `camera_info` YAML (from `cameracalibrator`) or a simple format:
+```yaml
+fx: 600.0
+fy: 600.0
+cx: 320.0
+cy: 240.0
+distortion: [0.0, 0.0, 0.0, 0.0, 0.0]
+```
+
+---
+
 ## Tag Configuration
 
 The simulation world contains:

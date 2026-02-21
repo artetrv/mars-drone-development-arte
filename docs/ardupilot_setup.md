@@ -4,19 +4,23 @@ Stack: ROS 2 Jazzy + Gazebo Harmonic + ArduPilot SITL + MAVROS
 Paths below use `~/harmonic_ws` (this repo).
 
 ## 1) Prepare Python environment
+
+The workspace uses `drone-venv/` at the repo root for ArduPilot SITL dependencies. Create it once:
 ```bash
-cd ~/ardupilot
-python3 -m venv venv
-source venv/bin/activate
+cd ~/harmonic_ws
+python3 -m venv drone-venv
+touch drone-venv/COLCON_IGNORE   # prevents colcon from scanning the venv
+source drone-venv/bin/activate
 ```
 
 Notes:
 - Do not use `--user` inside a venv.
-- ArduPilot does not include a top-level requirements.txt; use the install script below and install MAVProxy.
+- The `COLCON_IGNORE` file is required — without it, colcon errors when trying to scan the venv during builds.
 
 ## 2) Install prerequisites and MAVProxy
 ```bash
-cd ~/ardupilot
+source ~/harmonic_ws/drone-venv/bin/activate
+cd ~/harmonic_ws/src/ardupilot
 ./Tools/environment_install/install-prereqs-ubuntu.sh -y
 pip install --upgrade pip
 pip install MAVProxy
@@ -41,7 +45,7 @@ export GZ_SIM_SYSTEM_PLUGIN_PATH=/usr/local/lib:$GZ_SIM_SYSTEM_PLUGIN_PATH
 
 ## 4) Start ArduPilot SITL (Copter + Gazebo profile)
 ```bash
-cd ~/ardupilot
+cd ~/harmonic_ws/src/ardupilot
 source venv/bin/activate
 ./Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --console --map
 ```
