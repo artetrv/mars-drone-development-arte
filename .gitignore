@@ -6,3 +6,21 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
+
+# Personal notes and thesis work — not for public repo
+docs/
+tasks.md
+worklog.md
+data/
+update_same_id.py
+
+# Personal notes embedded in src packages
+src/tag_hover_two_tags/PROJECT_CONTEXT.md
+src/tag_hover_two_tags/PACKAGE_SUMMARY.md
+src/tag_hover_two_tags/QUICK_REFERENCE.md
+src/tag_hover_two_tags/logs/
+src/tag_hover_two_tags/tag_hover_two_tags/video analysis/
+src/tag_hover_two_tags/tag_hover_two_tags/USAGE_SAME_ID.md
+src/tag_hover_sim/controller_output.md
+src/tag_hover_sim/side_tangent.md
+src/tag_hover_sim/*.png
