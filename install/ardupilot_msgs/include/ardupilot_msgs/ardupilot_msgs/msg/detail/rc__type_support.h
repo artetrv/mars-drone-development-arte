@@ -1,1 +1,0 @@
-/home/javierbecerril/harmonic_ws/build/ardupilot_msgs/rosidl_generator_c/ardupilot_msgs/msg/detail/rc__type_support.h

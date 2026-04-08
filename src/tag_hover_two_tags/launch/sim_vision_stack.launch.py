@@ -166,6 +166,22 @@ def generate_launch_description():
         ],
     )
 
+    # PnP broadcaster — publishes TF for all detected tags (required by flight controller)
+    # Publishes: camera_frame → tag36h11:0 (ref) and camera_frame → tag36h11:1 (vib)
+    pnp_broadcaster = Node(
+        package='tag_hover_two_tags',
+        executable='apriltag_pnp_broadcaster',
+        name='apriltag_pnp_broadcaster',
+        output='screen',
+        parameters=[
+            {'camera_frame': LaunchConfiguration('camera_frame')},
+            {'tag_size_m': 0.127},
+            {'detections_topic': LaunchConfiguration('detections_topic')},
+            {'camera_info_topic': '/camera/camera_info'},
+            {'use_sim_time': LaunchConfiguration('use_sim_time')},
+        ],
+    )
+
     return LaunchDescription([
         set_gz_resource_path,
         use_sim_time_arg,
@@ -180,6 +196,7 @@ def generate_launch_description():
         gz_sim,
         camera_bridge,
         apriltag_node,
+        pnp_broadcaster,
         ref_pose_selector,
         vib_pose_selector,
         tag_oscillator,

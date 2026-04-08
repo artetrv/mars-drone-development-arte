@@ -28,7 +28,7 @@ sudo apt install \
 ## Build
 
 ```bash
-cd ~/harmonic_ws
+cd ~/your_ws
 source /opt/ros/jazzy/setup.bash
 colcon build --packages-select tag_hover_sim --symlink-install
 source install/setup.bash

@@ -24,8 +24,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Javier Becerril',
-    maintainer_email='javierbecerril@example.com',
+    maintainer='Mars Drone Development',
+    maintainer_email='todo@example.com',
     description='Simulation integration package for AprilTag hover/yaw-search stack in Gazebo Harmonic + ArduPilot SITL',
     license='MIT',
     tests_require=['pytest'],
@@ -33,10 +33,14 @@ setup(
         'console_scripts': [
             'hover_yaw_search = tag_hover_sim.hover_yaw_search:main',
             'hover_yaw_search_v1 = tag_hover_sim.hover_yaw_search_v1:main',
+            'hover_yaw_search_v1_orig = tag_hover_sim.hover_yaw_search_v1_orig:main',
+            'hover_two_tags = tag_hover_sim.hover_two_tags_controller:main',
+            'hover_single_tag = tag_hover_sim.hover_single_tag_controller:main',
             'hover_yaw_search_v2 = tag_hover_sim.hover_yaw_search_v2:main',
             'hover_yaw_search_sensor_lock = tag_hover_sim.hover_yaw_search_sensor_lock:main',
             'apriltag_tf_broadcaster = tag_hover_sim.apriltag_tf_broadcaster:main',
-            'apriltag_pnp_broadcaster = tag_hover_sim.apriltag_pnp_broadcaster:main'
+            'apriltag_pnp_broadcaster = tag_hover_sim.apriltag_pnp_broadcaster:main',
+            'hover_guided_hold = tag_hover_sim.hover_guided_hold:main'
         ],
     },
 )

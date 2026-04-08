@@ -1,1 +1,0 @@
-/home/javierbecerril/harmonic_ws/build/ardupilot_msgs/rosidl_typesupport_fastrtps_c/ardupilot_msgs/srv/detail/takeoff__rosidl_typesupport_fastrtps_c.h

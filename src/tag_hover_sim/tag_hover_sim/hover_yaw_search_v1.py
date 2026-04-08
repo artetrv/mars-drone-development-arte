@@ -4,7 +4,7 @@ import math
 import rclpy
 from rclpy.node import Node
 
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, PoseStamped
 from mavros_msgs.msg import State
 from rclpy.serialization import deserialize_message
 from rosidl_runtime_py.utilities import get_message
@@ -47,6 +47,7 @@ class HoverYawSearch(Node):
         self.declare_parameter('camera_frame', 'camera')
         self.declare_parameter('tag_frame', 'tag36h11:0')
         self.declare_parameter('max_yaw_rate', 0.6)         # rad/s clamp
+        self.declare_parameter('stale_tf_timeout', 2.0)     # seconds before TF considered stale (increase for slow detectors)
         self.declare_parameter('mavros_wait_timeout', 10.0)  # seconds to wait for MAVROS
         self.declare_parameter('mavros_prefix', '/mavros')   # base path for MAVROS topics
 
@@ -77,6 +78,7 @@ class HoverYawSearch(Node):
         self._have_state = False
         self._startup_time = rclpy.clock.Clock().now()
         self._mavros_ready_logged = False
+        self._drone_yaw = 0.0  # current drone yaw in ENU (radians)
 
         state_topic = f"{self.mavros_prefix}/state" if self.mavros_prefix else '/mavros/state'
         self._state_sub = self.create_subscription(
@@ -85,6 +87,9 @@ class HoverYawSearch(Node):
             self._state_cb,
             10
         )
+
+        pose_topic = f"{self.mavros_prefix}/local_position/pose"
+        self._pose_sub = self.create_subscription(PoseStamped, pose_topic, self._pose_cb, 10)
 
         # AprilTag detections for tag size measurement
         # Use generic message subscription to avoid import errors
@@ -138,6 +143,17 @@ class HoverYawSearch(Node):
     def _state_cb(self, msg: State):
         self._state = msg
         self._have_state = True
+
+    def _pose_cb(self, msg: PoseStamped):
+        q = msg.pose.orientation
+        self._drone_yaw = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        )
+        self.get_logger().info(
+            f"[POSE] yaw={math.degrees(self._drone_yaw):.1f}deg",
+            throttle_duration_sec=2.0
+        )
 
     def _detections_cb(self, msg):
         """Callback for AprilTag detections (generic message)."""
@@ -197,13 +213,19 @@ class HoverYawSearch(Node):
                     Time()
                 )
 
+                # Reject stale transforms (older than 0.5s)
+                age = (self.get_clock().now() - Time.from_msg(tf.header.stamp)).nanoseconds / 1e9
+                if age > 0.5:
+                    raise TransformException(f"Stale TF: {age:.2f}s old")
+
                 x = tf.transform.translation.x
                 y = tf.transform.translation.y
                 z = tf.transform.translation.z
 
-                # Basic sanity
-                if not math.isfinite(x) or not math.isfinite(y) or not math.isfinite(z) or abs(z) < 1e-3:
-                    raise TransformException("Non-finite TF values or z ≈ 0")
+                # Basic sanity — reject non-finite values and z <= 0.2m
+                # (z <= 0 = PnP flipped to "behind camera" solution; z < 0.2 = unreliably close)
+                if not math.isfinite(x) or not math.isfinite(y) or not math.isfinite(z) or z < 0.2:
+                    raise TransformException(f"Invalid TF: z={z:.3f}m (must be > 0.2m, non-finite, or negative = PnP flip)")
 
                 # === 4-DOF RELATIVE POSE REGULATION ===
                 # Target relative pose (in camera frame):
@@ -218,32 +240,32 @@ class HoverYawSearch(Node):
                 distance_error = z - self.target_distance
                 yaw_error = -math.atan2(x, z)  # tag right (x>0) should produce negative yaw (rotate left)
 
-                # === INDEPENDENT P CONTROLLERS (NO GATING) ===
-                # Apply continuous control on all DOFs simultaneously
-                
-                # Yaw control
+                # Yaw control — always active
                 yaw_cmd = self.lock_k_yaw * yaw_error
                 yaw_cmd = max(-self.max_yaw_rate, min(self.max_yaw_rate, yaw_cmd))
 
-                # Forward/backward control (z in body frame)
-                forward_cmd = self.lock_k_distance * distance_error
-                forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
-
-                # Left/right control (y in body frame)
-                lateral_cmd = self.lock_k_lateral * lateral_error
-                lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
-
-                # Up/down control (z in body frame - note: in our convention, z is vertical)
-                # Map camera vertical error to body vertical velocity
+                # Forward/lateral/vertical — gated: only move when yaw is aligned
                 max_vertical_vel = 0.3  # m/s
-                vertical_cmd = self.lock_k_vertical * vertical_error
-                vertical_cmd = max(-max_vertical_vel, min(max_vertical_vel, vertical_cmd))
+                if abs(yaw_error) < self.yaw_align_threshold:
+                    forward_cmd = self.lock_k_distance * distance_error
+                    forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
 
-                # Assemble velocity command (body frame convention)
-                cmd.linear.x = forward_cmd       # forward/back
-                cmd.linear.y = lateral_cmd       # left/right
-                cmd.linear.z = vertical_cmd      # up/down
-                cmd.angular.z = yaw_cmd         # yaw rotation
+                    lateral_cmd = self.lock_k_lateral * lateral_error
+                    lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
+
+                    vertical_cmd = self.lock_k_vertical * vertical_error
+                    vertical_cmd = max(-max_vertical_vel, min(max_vertical_vel, vertical_cmd))
+                else:
+                    forward_cmd = 0.0
+                    lateral_cmd = 0.0
+                    vertical_cmd = 0.0
+
+                # Rotate body-frame commands to ENU world frame (cmd_vel_unstamped is world-frame)
+                yaw = self._drone_yaw
+                cmd.linear.x = forward_cmd * math.cos(yaw) - lateral_cmd * math.sin(yaw)
+                cmd.linear.y = forward_cmd * math.sin(yaw) + lateral_cmd * math.cos(yaw)
+                cmd.linear.z = vertical_cmd      # up/down: no rotation needed
+                cmd.angular.z = yaw_cmd          # yaw rate: already body-frame
 
                 self.get_logger().info(
                     f"LOCK: yaw_err={yaw_error:.3f}rad yaw_cmd={yaw_cmd:.3f}rad/s | "
@@ -271,39 +293,53 @@ class HoverYawSearch(Node):
                     self.tag_frame,
                     Time()
                 )
-                
+
+                # Reject stale transforms (older than 0.5s)
+                age = (self.get_clock().now() - Time.from_msg(tf.header.stamp)).nanoseconds / 1e9
+                if age > 0.5:
+                    raise TransformException(f"Stale TF: {age:.2f}s old")
+
                 x = tf.transform.translation.x
                 y = tf.transform.translation.y
                 z = tf.transform.translation.z
-                
-                if math.isfinite(x) and math.isfinite(y) and math.isfinite(z) and abs(z) > 1e-3:
-                    # Tag found! Use same 4-DOF regulation as LOCK mode
+
+                if math.isfinite(x) and math.isfinite(y) and math.isfinite(z) and z > 0.2:
+                    # Tag found — yaw to align, then approach
                     lateral_error = -x
                     vertical_error = -y
                     distance_error = z - self.target_distance
                     yaw_error = -math.atan2(x, z)
 
-                    # Apply independent P controllers on all DOFs
+                    # Yaw control — always active
                     yaw_cmd = self.lock_k_yaw * yaw_error
                     yaw_cmd = max(-self.max_yaw_rate, min(self.max_yaw_rate, yaw_cmd))
 
-                    forward_cmd = self.lock_k_distance * distance_error
-                    forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
-
-                    lateral_cmd = self.lock_k_lateral * lateral_error
-                    lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
-
+                    # Forward/lateral/vertical — gated on yaw alignment
                     max_vertical_vel = 0.3
-                    vertical_cmd = self.lock_k_vertical * vertical_error
-                    vertical_cmd = max(-max_vertical_vel, min(max_vertical_vel, vertical_cmd))
+                    if abs(yaw_error) < self.yaw_align_threshold:
+                        forward_cmd = self.lock_k_distance * distance_error
+                        forward_cmd = max(-self.max_forward_vel, min(self.max_forward_vel, forward_cmd))
 
-                    cmd.linear.x = forward_cmd
-                    cmd.linear.y = lateral_cmd
+                        lateral_cmd = self.lock_k_lateral * lateral_error
+                        lateral_cmd = max(-self.max_lateral_vel, min(self.max_lateral_vel, lateral_cmd))
+
+                        vertical_cmd = self.lock_k_vertical * vertical_error
+                        vertical_cmd = max(-max_vertical_vel, min(max_vertical_vel, vertical_cmd))
+                    else:
+                        forward_cmd = 0.0
+                        lateral_cmd = 0.0
+                        vertical_cmd = 0.0
+
+                    # Rotate body-frame commands to ENU world frame
+                    yaw = self._drone_yaw
+                    cmd.linear.x = forward_cmd * math.cos(yaw) - lateral_cmd * math.sin(yaw)
+                    cmd.linear.y = forward_cmd * math.sin(yaw) + lateral_cmd * math.cos(yaw)
                     cmd.linear.z = vertical_cmd
                     cmd.angular.z = yaw_cmd
-                    
+
                     self.get_logger().info(
-                        f"SEARCH->TAG FOUND! Auto-locking. yaw_err={yaw_error:.3f}rad | "
+                        f"SEARCH->TAG FOUND! yaw_err={yaw_error:.3f}rad "
+                        f"({'ALIGNING' if abs(yaw_error) >= self.yaw_align_threshold else 'APPROACHING'}) | "
                         f"fwd_cmd={forward_cmd:.3f}m/s | lat_cmd={lateral_cmd:.3f}m/s | vert_cmd={vertical_cmd:.3f}m/s",
                         throttle_duration_sec=0.5
                     )

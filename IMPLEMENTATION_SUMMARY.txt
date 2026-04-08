@@ -142,7 +142,7 @@ QUICK START
 ================================================================================
 
 1. Build:
-   cd ~/harmonic_ws
+   cd ~/your_ws
    colcon build --packages-select tag_hover_sim
    source install/setup.bash
 

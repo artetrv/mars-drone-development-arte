@@ -1,90 +1,42 @@
-1. High-level idea (clean framing)
-What you are doing (one sentence)
+# Two-Tag Measurement Architecture Notes
+
+---
+
+## 1. High-level idea
+
+**What this does (one sentence)**
 
 Instead of controlling the UAV from AprilTag feedback, we use dual AprilTag pose estimation as a sensing system to measure relative motion (vibration) of a target object with respect to a stationary world reference.
 
-Why this is smart
+**Why this approach is effective**
 
-No closed-loop flight control required (huge reduction in risk)
+- No closed-loop flight control required (significant reduction in risk)
+- Works even if the UAV is imperfectly stable
+- Lets you quantify vibration frequency, amplitude, and drift
+- Produces hardware-validated data that simulation can't fake
+- Directly relevant to inspection and structural monitoring
 
-Works even if the UAV is imperfectly stable
+**Key principle**
 
-Lets you quantify vibration frequency, amplitude, and drift
+You are not comparing tag poses in the camera frame. You are computing:
 
-Produces hardware-validated data that simulation can’t fake
+$$T_{vib}^{world} \ominus T_{ref}^{world}$$
 
-Still directly relevant to inspection & structural monitoring
+Which removes: UAV drift, small attitude changes, camera vibration, optical flow / IMU imperfections.
 
-Key principle
+---
 
-You are not comparing tag poses in the camera frame.
+## 2. System architecture
 
-You are computing:
+**Physical setup**
 
-𝑇
-𝑣
-𝑖
-𝑏
-𝑤
-𝑜
-𝑟
-𝑙
-𝑑
-⊖
-𝑇
-𝑟
-𝑒
-𝑓
-𝑤
-𝑜
-𝑟
-𝑙
-𝑑
-T
-vib
-world
-	​
+- **Tag A (Reference Tag):** Large tag (e.g. AprilTag 36h11, ~15–20 cm). Mounted on a stationary wall/structure. Defines the local world frame.
+- **Tag B (Vibration Tag):** Smaller tag on the vibrating object. Its motion is what we measure.
+- **UAV:** Holds position roughly (manual / Loiter / Guided). Does not need precision hover.
 
-⊖T
-ref
-world
-	​
+**Software components (ROS)**
 
-
-Which removes:
-
-UAV drift
-
-Small attitude changes
-
-Camera vibration
-
-Optical flow / IMU imperfections
-
-2. System architecture (what runs where)
-Physical setup
-
-Tag A (Reference Tag)
-
-Large tag (e.g. AprilTag 36h11, size ~15–20 cm)
-
-Mounted on a stationary wall / structure
-
-Defines the local world frame
-
-Tag B (Vibration Tag)
-
-Smaller tag on the vibrating object
-
-Motion is what you want to measure
-
-UAV
-
-Holds position roughly (manual / Loiter / Guided)
-
-Does not need precision hover
-
-Software components (ROS-centric view)
+```
 Camera Driver
    |
    +--> apriltag_node_ref   (detects Tag A only)
@@ -96,375 +48,175 @@ Camera Driver
             |
             v
      Vibration Estimator + Logger
+```
 
-3. AprilTag detection: why two nodes is correct
+---
 
-Running two AprilTag nodes is actually the cleanest way to do this.
+## 3. AprilTag detection: why two nodes is correct
 
-Why not one node?
+Running two AprilTag nodes is the cleanest way to handle this.
 
-Different tag families / sizes / detection thresholds
+**Why not one node?**
 
-Independent tuning (critical on hardware)
+- Different tag families / sizes / detection thresholds
+- Independent tuning (critical on hardware)
+- Cleaner topic separation
+- Easier debugging and logging
 
-Cleaner topic separation
+**Node responsibilities**
 
-Easier debugging & logging
+- `apriltag_ref_node`: Detects only the stationary tag. Publishes pose of reference tag in camera frame. This pose defines a dynamic world reference tied to the real environment.
+- `apriltag_vib_node`: Detects only the vibrating tag. Publishes pose of vibrating tag in camera frame.
 
-Node responsibilities
-Node 1: apriltag_ref_node
+---
 
-Detects only the stationary tag
+## 4. Coordinate frames
 
-Publishes:
+If this is wrong, everything is wrong.
 
-Pose of reference tag in camera frame
+**Frames involved**
+- `camera_frame`
+- `ref_tag_frame`
+- `vib_tag_frame`
+- `virtual_world_frame` (defined by ref tag)
 
-This pose defines a dynamic world reference tied to the real environment
-
-Node 2: apriltag_vib_node
-
-Detects only the vibrating tag
-
-Publishes:
-
-Pose of vibrating tag in camera frame
-
-4. Coordinate frames (this is the most important part)
-
-If this is wrong, everything is wrong — so let’s be precise.
-
-Frames involved
-camera_frame
-ref_tag_frame
-vib_tag_frame
-virtual_world_frame (defined by ref tag)
-
-What each node gives you
+**What each node gives you**
 
 From AprilTag detection:
 
-𝑇
-𝑟
-𝑒
-𝑓
-𝑐
-𝑎
-𝑚
-T
-ref
-cam
-	​
+$$T_{ref}^{cam}, \quad T_{vib}^{cam}$$
 
+Each is a full SE(3) transform: position (x, y, z) + orientation (quaternion / rotation matrix).
 
-𝑇
-𝑣
-𝑖
-𝑏
-𝑐
-𝑎
-𝑚
-T
-vib
-cam
-	​
+---
 
+## 5. Pose differencing math
 
-Each is a full SE(3) transform:
+**Step 1: Invert the reference pose**
 
-position (x, y, z)
+$$T_{cam}^{ref} = (T_{ref}^{cam})^{-1}$$
 
-orientation (quaternion / rotation matrix)
+This gives the camera pose expressed in the reference frame.
 
-5. Pose differencing math (core idea)
+**Step 2: Transform vibrating tag into reference frame**
 
-You want vibration relative to the stationary reference, not the drone.
-
-Step 1: Invert the reference pose
-𝑇
-𝑐
-𝑎
-𝑚
-𝑟
-𝑒
-𝑓
-=
-(
-𝑇
-𝑟
-𝑒
-𝑓
-𝑐
-𝑎
-𝑚
-)
-−
-1
-T
-cam
-ref
-	​
-
-=(T
-ref
-cam
-	​
-
-)
-−1
-
-This gives you:
-
-camera pose expressed in the reference frame
-
-Step 2: Transform vibrating tag into reference frame
-𝑇
-𝑣
-𝑖
-𝑏
-𝑟
-𝑒
-𝑓
-=
-𝑇
-𝑐
-𝑎
-𝑚
-𝑟
-𝑒
-𝑓
-⋅
-𝑇
-𝑣
-𝑖
-𝑏
-𝑐
-𝑎
-𝑚
-T
-vib
-ref
-	​
-
-=T
-cam
-ref
-	​
-
-⋅T
-vib
-cam
-	​
-
+$$T_{vib}^{ref} = T_{cam}^{ref} \cdot T_{vib}^{cam}$$
 
 Now:
+- UAV motion is canceled
+- Camera motion is canceled
+- What remains is true relative motion
 
-UAV motion is canceled
+**Step 3: Extract vibration signals**
 
-Camera motion is canceled
+From $T_{vib}^{ref}$:
 
-What remains is true relative motion
+- Translation: $x(t), y(t), z(t)$
+- Rotation: $roll(t), pitch(t), yaw(t)$
 
-Step 3: Extract vibration signals
+These time series are the raw vibration signals.
 
-From 
-𝑇
-𝑣
-𝑖
-𝑏
-𝑟
-𝑒
-𝑓
-T
-vib
-ref
-	​
+---
 
-:
+## 6. What "controller" is actually needed
 
-Translation:
+**Short answer: none for flight**
 
-𝑥
-(
-𝑡
-)
-,
-𝑦
-(
-𝑡
-)
-,
-𝑧
-(
-𝑡
-)
-x(t),y(t),z(t)
+This is a measurement system, not a flight controller.
 
-Rotation:
+**Components needed:**
 
-roll(t), pitch(t), yaw(t)
+1. **Transform Controller (kinematic)**
+   - Subscribe to both tag pose topics
+   - Time-synchronize messages
+   - Compute relative transform
+   - Publish relative pose (and optionally relative twist)
+   - Pure math, no dynamics
 
-These time series are your raw vibration signals.
+2. **Vibration Estimator**
+   - Maintain time buffer
+   - Compute: displacement amplitude, dominant frequency (FFT), RMS vibration
+   - Optional: band-pass filtering, windowed FFT
 
-6. What “controller” do you actually need right now?
-Short answer: none for flight
+3. **Logger / Dataset Generator**
+   - Save: raw poses, relative pose, timestamps
+   - Format: CSV / ROS bag
+   - Output becomes: result plots, future controller training data
 
-You are building a measurement controller, not a flight controller.
+---
 
-Components you do need
-1. Transform Controller (kinematic)
+## 7. Future extensions (not blocking current work)
 
-Responsibilities:
+This architecture sets up:
 
-Subscribe to both tag pose topics
+- Vision-based disturbance observers
+- Feedforward vibration compensation
+- Visual servoing with disturbance rejection
+- Model-based vibration tracking
 
-Time-synchronize messages
+None of that blocks current progress.
 
-Compute relative transform
+---
 
-Publish:
+## 8. Failure modes and mitigations
 
-relative pose
-
-relative twist (optional)
-
-This is pure math, no dynamics.
-
-2. Vibration Estimator
-
-Responsibilities:
-
-Maintain time buffer
-
-Compute:
-
-displacement amplitude
-
-dominant frequency (FFT)
-
-RMS vibration
-
-Optional:
-
-band-pass filtering
-
-windowed FFT
-
-3. Logger / Dataset Generator
-
-Responsibilities:
-
-Save:
-
-raw poses
-
-relative pose
-
-timestamps
-
-Format:
-
-CSV / ROS bag
-
-This becomes:
-
-thesis plots
-
-future controller training data
-
-7. What controllers come later (but not now)
-
-This architecture sets you up for:
-
-Vision-based disturbance observers
-
-Feedforward vibration compensation
-
-Visual servoing with disturbance rejection
-
-Model-based vibration tracking
-
-But none of that blocks today’s progress.
-
-8. Failure modes & mitigations (important for thesis)
-Issue	Mitigation
-Ref tag briefly lost	Hold last valid transform
-Vib tag occluded	Skip frame
-UAV yaw drift	Automatically canceled
-Camera vibration	Automatically canceled
-Lighting changes	Independent detector tuning
+| Issue | Mitigation |
+|---|---|
+| Ref tag briefly lost | Hold last valid transform |
+| Vib tag occluded | Skip frame |
+| UAV yaw drift | Automatically canceled |
+| Camera vibration | Automatically canceled |
+| Lighting changes | Independent detector tuning |
 
 This is a robust measurement pipeline, not a fragile controller.
 
-9. How this fits your thesis narrative
+---
 
-You can frame this as:
+## 9. System framing
 
-A vision-based relative pose sensing framework for vibration measurement in UAV inspection scenarios, validated on hardware and designed to decouple perception from flight control.
+This system is a vision-based relative pose sensing framework for vibration measurement in UAV inspection scenarios. It is designed to decouple perception from flight control, making it robust to imperfect hover.
 
-It strengthens:
+It supports:
 
-sensor fusion discussion
+- Sensor fusion discussion
+- Estimation vs control separation
+- Simulation → hardware realism validation
 
-estimation vs control separation
+---
 
-simulation → hardware realism
+## 10. Reference implementation prompt
 
-10. Copilot-ready prompt (paste this exactly)
+The following prompt can be used to generate or verify the core relative pose node:
 
-Below is a direct prompt you can drop into GitHub Copilot or Copilot Chat:
-
-Copilot Prompt:
-
+```
 I am working on a ROS-based UAV perception system using AprilTags.
 
 I want to build a Python ROS node that subscribes to two AprilTag pose topics:
-
-/apriltag_ref/pose → pose of a stationary reference tag detected in the camera frame
-
-/apriltag_vib/pose → pose of a vibrating target tag detected in the camera frame
+  /apriltag_ref/pose → pose of a stationary reference tag detected in the camera frame
+  /apriltag_vib/pose → pose of a vibrating target tag detected in the camera frame
 
 Each topic publishes geometry_msgs/PoseStamped.
 
 The node should:
+1. Time-synchronize the two pose messages.
+2. Convert both poses into SE(3) homogeneous transformation matrices.
+3. Invert the reference tag transform to obtain the camera pose in the reference frame.
+4. Compute the relative transform of the vibrating tag with respect to the reference tag:
+   T_vib_ref = inv(T_ref_cam) * T_vib_cam
+5. Publish the relative pose as a new PoseStamped topic called /relative_vibration_pose.
+6. Log timestamped relative translation (x,y,z) and rotation (roll,pitch,yaw) to CSV.
 
-Time-synchronize the two pose messages.
+Assume ROS 2 Python (rclpy), numpy, and tf_transformations are available.
+Structure the code with helper functions for transform math.
+```
 
-Convert both poses into SE(3) homogeneous transformation matrices.
+---
 
-Invert the reference tag transform to obtain the camera pose in the reference frame.
+## 11. Summary
 
-Compute the relative transform of the vibrating tag with respect to the reference tag:
-T_vib_ref = inv(T_ref_cam) * T_vib_cam
+This is a strategic design choice:
 
-Publish the relative pose as a new PoseStamped topic called /relative_vibration_pose.
-
-Log timestamped relative translation (x,y,z) and rotation (roll,pitch,yaw) to CSV.
-
-Assume standard ROS Python (rospy), numpy, and tf.transformations are available.
-
-Please structure the code cleanly with helper functions for transform math.
-
-11. Final take
-
-This is not a compromise — it’s a strategic move.
-
-You:
-
-get real hardware data
-
-avoid unstable flight control debugging
-
-still publish meaningful results
-
-lay groundwork for future control
-
-If you want, next we can:
-
-sketch the exact ROS topic graph
-
-write the relative transform node together
-
-design the FFT/vibration analysis pipeline
-
-help you write the methods section for the paper
+- Produces real hardware data
+- Avoids unstable flight control debugging
+- Publishes meaningful, analyzable results
+- Lays groundwork for future control work

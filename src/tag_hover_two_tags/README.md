@@ -49,7 +49,7 @@ sudo apt install ros-jazzy-ros-gz-bridge ros-jazzy-apriltag-ros ros-jazzy-messag
 ## Build
 
 ```bash
-cd ~/harmonic_ws
+cd ~/your_ws
 source /opt/ros/jazzy/setup.bash
 colcon build --packages-select tag_hover_two_tags --symlink-install
 source install/setup.bash
@@ -60,7 +60,7 @@ source install/setup.bash
 1) **Vision stack + Oscillator** (Gazebo + camera bridge + AprilTag + tag pose selectors + oscillator)
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/harmonic_ws/install/setup.bash
+source ~/your_ws/install/setup.bash
 ros2 launch tag_hover_two_tags sim_vision_stack.launch.py
 ```
 
@@ -78,7 +78,7 @@ ros2 launch tag_hover_two_tags sim_vision_stack.launch.py \
 2) **Relative pose estimator + logger**
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/harmonic_ws/install/setup.bash
+source ~/your_ws/install/setup.bash
 ros2 launch tag_hover_two_tags sim_lockon_backbone.launch.py
 ```
 

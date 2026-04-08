@@ -24,7 +24,7 @@ class TagPnPBroadcaster(Node):
         super().__init__('apriltag_pnp_broadcaster')
         self.camera_frame = self.declare_parameter('camera_frame','camera').get_parameter_value().string_value
         self.tag_prefix   = self.declare_parameter('tag_prefix','tag36h11').get_parameter_value().string_value
-        self.tag_size     = float(self.declare_parameter('tag_size_m', 0.162).get_parameter_value().double_value)
+        self.tag_size     = float(self.declare_parameter('tag_size_m', 0.127).get_parameter_value().double_value)
         det_topic         = self.declare_parameter('detections_topic','/detections').get_parameter_value().string_value
         cam_info_topic    = self.declare_parameter('camera_info_topic','/camera_info').get_parameter_value().string_value
 
@@ -64,11 +64,9 @@ class TagPnPBroadcaster(Node):
                                 [det.corners[2].x, det.corners[2].y],
                                 [det.corners[3].x, det.corners[3].y]], dtype=np.float32)
 
-            ok, rvec, tvec = cv2.solvePnP(self.objp, img_pts, self.K, self.D, flags=cv2.SOLVEPNP_IPPE_SQUARE)
+            ok, rvec, tvec = cv2.solvePnP(self.objp, img_pts, self.K, self.D, flags=cv2.SOLVEPNP_ITERATIVE)
             if not ok:
-                ok, rvec, tvec = cv2.solvePnP(self.objp, img_pts, self.K, self.D, flags=cv2.SOLVEPNP_ITERATIVE)
-                if not ok: 
-                    self.get_logger().warn("solvePnP failed"); continue
+                self.get_logger().warn("solvePnP failed"); continue
 
             # Build TF: parent is camera frame, child is tag prefix + id
             t = TransformStamped()

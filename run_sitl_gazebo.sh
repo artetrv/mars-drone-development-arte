@@ -1,16 +1,17 @@
-# ~/harmonic_ws/run_sitl_gazebo.sh
 #!/usr/bin/env bash
+# Run ArduPilot SITL for Gazebo Harmonic integration.
+# Source this from your workspace root.
 
-source setup_harmonic_env.sh/bin/activate
-source drone-venv/bin/activate
+WS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+source "$WS_ROOT/drone-venv/bin/activate"
 
-cd ~/harmonic_ws/src/ardupilot/Tools/autotest || exit 1
+cd "$WS_ROOT/src/ardupilot/Tools/autotest" || exit 1
 
 ./sim_vehicle.py \
   -v ArduCopter \
   -f gazebo-iris \
   --model JSON \
   --console \
-  --map
+  --map \
   --out=127.0.0.1:14550

@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: tag-hover-two-tags
-Version: 0.1.0
-Summary: Two-tag AprilTag relative pose measurement stack for Gazebo Harmonic + ArduPilot SITL
-Maintainer: Javier Becerril
-Maintainer-email: javierbecerril@example.com
-License: MIT

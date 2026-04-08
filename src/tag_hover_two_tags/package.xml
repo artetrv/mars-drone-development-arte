@@ -5,7 +5,7 @@
   <version>0.1.0</version>
   <description>Two-tag AprilTag relative pose measurement stack for Gazebo Harmonic + ArduPilot SITL</description>
   
-  <maintainer email="javierbecerril@example.com">Javier Becerril</maintainer>
+  <maintainer email="todo@example.com">Mars Drone Development</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>

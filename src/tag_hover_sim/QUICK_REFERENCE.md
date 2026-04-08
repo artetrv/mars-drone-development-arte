@@ -5,7 +5,7 @@ All commands use the correct working configuration from `docs/LOCKON_NOTES.md`.
 ## Environment (source in every new terminal)
 
 ```bash
-cd ~/harmonic_ws
+cd ~/your_ws
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 source setup_harmonic_env.sh   # sets up Gazebo env vars
@@ -17,7 +17,7 @@ source setup_harmonic_env.sh   # sets up Gazebo env vars
 
 ### Terminal 1 — ArduPilot SITL
 ```bash
-cd ~/harmonic_ws/src/ardupilot
+cd ~/your_ws/src/ardupilot
 source ../../drone-venv/bin/activate
 ./Tools/autotest/sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --map --console \
   --out=127.0.0.1:14550 --out=127.0.0.1:14555
@@ -26,7 +26,7 @@ MAVProxy console opens here. Use it to arm/takeoff (see below).
 
 ### Terminal 2 — Gazebo
 ```bash
-cd ~/harmonic_ws
+cd ~/your_ws
 source setup_harmonic_env.sh
 export GZ_SIM_RESOURCE_PATH=$(pwd)/src/tag_hover_sim/models:$(pwd)/src/ardupilot_gazebo/models
 gz sim -r src/tag_hover_sim/worlds/apriltag_test.sdf
@@ -34,7 +34,7 @@ gz sim -r src/tag_hover_sim/worlds/apriltag_test.sdf
 
 ### Terminal 3 — Camera bridge
 ```bash
-cd ~/harmonic_ws && source setup_harmonic_env.sh
+cd ~/your_ws && source setup_harmonic_env.sh
 ros2 run ros_gz_bridge parameter_bridge \
   /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/image@sensor_msgs/msg/Image@gz.msgs.Image \
   /world/apriltag_test/model/iris_with_rgb_camera/model/gimbal/link/pitch_link/sensor/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo \
@@ -46,22 +46,22 @@ Verify: `ros2 topic hz /camera/image_raw` → ~6-7 Hz
 
 ### Terminal 4 — MAVROS
 ```bash
-cd ~/harmonic_ws && source setup_harmonic_env.sh
+cd ~/your_ws && source setup_harmonic_env.sh
 ros2 launch mavros apm.launch fcu_url:=udp://:14555@127.0.0.1:14550
 ```
 
 ### Terminal 5 — AprilTag detector
 ```bash
-cd ~/harmonic_ws && source setup_harmonic_env.sh
+cd ~/your_ws && source setup_harmonic_env.sh
 ros2 run apriltag_ros apriltag_node --ros-args \
   -r image_rect:=/camera/image_raw \
   -r camera_info:=/camera/camera_info \
-  --params-file ~/harmonic_ws/src/tag_hover_sim/config/apriltag_params.yaml
+  --params-file ~/your_ws/src/tag_hover_sim/config/apriltag_params.yaml
 ```
 
 ### Terminal 6 — PnP TF broadcaster
 ```bash
-cd ~/harmonic_ws && source setup_harmonic_env.sh
+cd ~/your_ws && source setup_harmonic_env.sh
 ros2 run tag_hover_sim apriltag_pnp_broadcaster --ros-args \
   -p camera_frame:=iris_with_rgb_camera/gimbal/pitch_link/camera \
   -p detections_topic:=/detections
@@ -69,7 +69,7 @@ ros2 run tag_hover_sim apriltag_pnp_broadcaster --ros-args \
 
 ### Terminal 7 — Controller (stable baseline v1)
 ```bash
-cd ~/harmonic_ws && source setup_harmonic_env.sh
+cd ~/your_ws && source setup_harmonic_env.sh
 ros2 run tag_hover_sim hover_yaw_search_v1 \
   --ros-args \
   -p body_frame:=base_link \

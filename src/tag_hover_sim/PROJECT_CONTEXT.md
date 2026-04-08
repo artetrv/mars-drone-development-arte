@@ -139,7 +139,7 @@ export GZ_SIM_RESOURCE_PATH=$(pwd)/src/tag_hover_sim/models:$(pwd)/src/ardupilot
 - **Lateral drift (v2):** Residual rightward drift in `hover_yaw_search.py` due to pure-P IBVS + camera–body misalignment. Root cause documented. Recommended fix: `LATERAL_DEADBAND = 0.05 m`.
 - **Vertical control disabled (v2):** `lock_k_vertical` ignored; vertical held at 0.0. FCU maintains altitude.
 - **Yaw gating random walk:** Intermittent lateral "bursts" when yaw error hovers near threshold. Mitigated by removing gating or tightening deadband.
-- **Sim camera rate ~6-7 Hz:** Gazebo Harmonic limit at current world complexity. Acceptable for current thesis scope.
+- **Sim camera rate ~6-7 Hz:** Gazebo Harmonic limit at current world complexity. Acceptable for current project scope.
 - **Code copies in tag_hover_two_tags:** This package is the canonical source for all controller and broadcaster nodes. Copies in `tag_hover_two_tags/tag_hover_sim/` may drift.
 
 ---

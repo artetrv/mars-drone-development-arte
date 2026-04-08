@@ -142,16 +142,8 @@ def estimate_pose(
     img_pts = detection.corners.astype(np.float64)
 
     try:
-        # solvePnPGeneric with IPPE_SQUARE returns both solutions + their errors
-        n_sols, rvecs, tvecs, errors = cv2.solvePnPGeneric(
-            obj_pts, img_pts, camera_matrix, dist_coeffs,
-            flags=cv2.SOLVEPNP_IPPE_SQUARE,
-        )
-        idx = int(np.argmin([errors[i][0] for i in range(n_sols)]))
-        rvec, tvec, reproj_err = rvecs[idx], tvecs[idx], float(errors[idx][0])
-
-    except (cv2.error, AttributeError):
-        # Fallback for older OpenCV builds
+        # SOLVEPNP_ITERATIVE: robust, no corner-ordering constraints, works well
+        # for square planar tags viewed roughly face-on (typical inspection use case).
         ok, rvec, tvec = cv2.solvePnP(
             obj_pts, img_pts, camera_matrix, dist_coeffs,
             flags=cv2.SOLVEPNP_ITERATIVE,
@@ -160,6 +152,9 @@ def estimate_pose(
             return None
         proj, _ = cv2.projectPoints(obj_pts, rvec, tvec, camera_matrix, dist_coeffs)
         reproj_err = float(np.mean(np.linalg.norm(img_pts - proj.reshape(-1, 2), axis=1)))
+
+    except (cv2.error, AttributeError):
+        return None
 
     if reproj_err > max_reproj_error:
         return None  # likely blur, partial occlusion, or wrong detection

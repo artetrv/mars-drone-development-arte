@@ -111,7 +111,7 @@ class RelativeVibrationPose(Node):
         self.reference_frame = self.declare_parameter('reference_frame', '').get_parameter_value().string_value
         self.queue_size = int(self.declare_parameter('sync_queue_size', 20).get_parameter_value().integer_value)
         self.slop = float(self.declare_parameter('sync_slop_sec', 0.05).get_parameter_value().double_value)
-        self.csv_dir = self.declare_parameter('csv_dir', '~/harmonic_ws/src/tag_hover_two_tags/logs').get_parameter_value().string_value
+        self.csv_dir = self.declare_parameter('csv_dir', '~/.ros/tag_hover_two_tags').get_parameter_value().string_value
         self.csv_basename = self.declare_parameter('csv_basename', 'relative_vibration').get_parameter_value().string_value
 
         self._pub = self.create_publisher(PoseStamped, self.output_topic, 10)

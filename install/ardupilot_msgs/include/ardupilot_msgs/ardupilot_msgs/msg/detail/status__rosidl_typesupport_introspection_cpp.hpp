@@ -1,1 +1,0 @@
-/home/javierbecerril/harmonic_ws/build/ardupilot_msgs/rosidl_typesupport_introspection_cpp/ardupilot_msgs/msg/detail/status__rosidl_typesupport_introspection_cpp.hpp

@@ -1,4 +1,4 @@
-# Project Context — harmonic_ws (Master)
+# Project Context (Master)
 
 > **Scope:** Workspace-level. Governs all agents and all sub-projects in this repo.
 > **Sub-project contexts:** `src/tag_hover_sim/PROJECT_CONTEXT.md`, `src/tag_hover_two_tags/PROJECT_CONTEXT.md`
@@ -8,13 +8,11 @@
 
 ## 1. Project Overview
 
-- **Project type:** Academic research prototype (graduate thesis)
+- **Project type:** Academic research prototype
 - **Domain:** Robotics — autonomous UAV inspection, vision-based control, relative pose sensing
-- **Intended users:** Researcher (Javier Becerril), thesis advisor/committee
-- **Institution:** [TBD: University/department name]
-- **Thesis working title:** [TBD — suggested framing: "Vision-Based Relative Pose Sensing and Autonomous Hover for UAV Inspection Using AprilTag Fiducials"]
+- **Intended users:** Project contributors and collaborators
 
-This workspace implements two complementary UAV inspection behaviors validated in Gazebo Harmonic simulation with ArduPilot SITL, targeting deployment to a Raspberry Pi 5 + Pixhawk hardware platform:
+This workspace implements two complementary UAV inspection behaviors validated in Gazebo Harmonic simulation with ArduPilot SITL, targeting deployment to a Raspberry Pi 4 + Pixhawk hardware platform:
 
 1. **Single-tag IBVS hover** (`tag_hover_sim`): A drone autonomously searches for an AprilTag, locks on, and maintains a regulated standoff pose using image-based visual servoing.
 2. **Two-tag vibration measurement** (`tag_hover_two_tags`): Dual AprilTags decouple UAV motion from target motion to measure vibration of a structure relative to a stationary reference — without requiring closed-loop flight control.
@@ -23,9 +21,9 @@ This workspace implements two complementary UAV inspection behaviors validated i
 
 ## 2. Product Owner Intent
 
-- **Current objective:** Complete simulation validation of both sub-projects, then deploy the single-tag IBVS controller to real hardware (Raspberry Pi 5 + Pixhawk) for thesis experiments.
-- **Why this matters now:** Simulation-to-hardware deployment is the key thesis milestone. The control pipeline must be proven equivalent in both environments.
-- **Deadline/time pressure:** [TBD: Thesis submission date]
+- **Current objective:** Complete simulation validation of both sub-projects, then deploy the single-tag IBVS controller to real hardware (Raspberry Pi 4 + Pixhawk) for hardware experiments.
+- **Why this matters now:** Simulation-to-hardware deployment is the key project milestone. The control pipeline must be proven equivalent in both environments.
+- **Deadline/time pressure:** [TBD]
 
 ---
 
@@ -40,10 +38,10 @@ This workspace implements two complementary UAV inspection behaviors validated i
 
 ## 4. Secondary Objectives
 
-- Hardware deployment guide complete and verified (Raspberry Pi 5 + Pixhawk).
+- Hardware deployment guide complete and verified (Raspberry Pi 4 + Pixhawk).
 - 3-phase hybrid controller (`hover_yaw_search_sensor_lock`) validated for silent handoff to optical flow hover.
 - Two-tag pipeline validated with sinusoidal oscillator in sim, producing clean CSV for FFT analysis.
-- Thesis-quality documentation: architecture diagrams, result plots, reproducible experiment scripts.
+- Research-quality documentation: architecture diagrams, result plots, reproducible experiment scripts.
 
 ---
 
@@ -54,7 +52,7 @@ This workspace implements two complementary UAV inspection behaviors validated i
 - No obstacle avoidance.
 - No adaptive/online gain tuning.
 - No PX4 support — ArduPilot firmware only.
-- No real-time FFT/frequency estimation in ROS nodes (post-processing of CSV is sufficient for thesis).
+- No real-time FFT/frequency estimation in ROS nodes (post-processing of CSV is sufficient).
 - Do not add CI/CD or automated test pipelines unless explicitly requested.
 
 ---
@@ -70,11 +68,11 @@ This workspace implements two complementary UAV inspection behaviors validated i
 - **ros_gz_bridge** (camera bridge — must use full scoped path with remapping)
 
 ### Hardware target (real deployment)
-- Companion computer: **Raspberry Pi 5**
+- Companion computer: **Raspberry Pi 4**
 - FCU: **Pixhawk** (ArduPilot firmware)
-- Camera: **USB V4L2** (calibration file required)
-- Serial: MAVProxy owns `/dev/ttyAMA0` at 57600 baud; MAVROS connects via UDP
-- FCU mode: `GUIDED_NOGPS` (optical flow + rangefinder)
+- Camera: **RealSense D455** (calibration file required)
+- Serial: `/dev/ttyS0` at 57600 baud; MAVROS connects via UDP
+- FCU mode: `GUIDED` (optical flow active)
 
 ### Hard constraints
 - **Only one MAVROS instance per ROS domain** — duplicate causes allocator crash.
@@ -97,7 +95,7 @@ This workspace implements two complementary UAV inspection behaviors validated i
 
 | Decision | Authority |
 |---|---|
-| New controller architectures or phases | Product owner (Javier) approval required |
+| New controller architectures or phases | Product owner approval required |
 | New packages or major dependencies | Product owner approval required |
 | Gain tuning within existing controller parameters | Agent may propose; owner approves before hardware |
 | Adding deadbands, clamps, or minor control patches | Agent may implement in v2/dev controller |
@@ -106,7 +104,6 @@ This workspace implements two complementary UAV inspection behaviors validated i
 | Modifying `ai-workbench/` canonical files | **Forbidden** without promotion gate in AGENTS.md |
 | Modifying Gazebo world/model SDF files | Agent may propose; owner reviews visual/physics impact |
 | Hardware deployment (real flight tests) | Product owner only |
-| Thesis writing and framing | Product owner only |
 
 ---
 
@@ -187,5 +184,5 @@ All implementation tasks must include:
 - **MAVROS allocator crash:** Caused by duplicate MAVROS instance or topic type mismatch. Fix: single MAVROS per domain, correct `--out` port on SITL. See `docs/LOCKON_NOTES.md`.
 - **Camera bridge silent failure:** Simple `/camera` bridge produces no data; must use full scoped Gazebo model path with remapping. See `docs/LOCKON_NOTES.md`.
 - **Camera frame mismatch:** `camera_frame` parameter must exactly match what the PnP broadcaster uses as the TF parent. See `docs/LOCKON_NOTES.md`.
-- **Pure-P controller steady-state bias:** Documented in `src/tag_hover_sim/chatgptprompt.md` — lateral deadband is the recommended minimal fix.
+- **Pure-P controller steady-state bias:** Lateral deadband is the recommended minimal fix.
 - **Prevent:** Always verify `GZ_SIM_RESOURCE_PATH` includes all model paths before `gz sim`. Models load silently without them (world loads but drone/tag textures fail).
