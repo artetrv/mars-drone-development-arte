@@ -1,0 +1,11 @@
+[submodule "src/ardupilot"]
+	path = src/ardupilot
+	url = https://github.com/ArduPilot/ardupilot.git
+
+[submodule "src/ardupilot_gazebo"]
+	path = src/ardupilot_gazebo
+	url = https://github.com/ArduPilot/ardupilot_gazebo.git
+
+[submodule "src/gazebo_apriltag"]
+	path = src/gazebo_apriltag
+	url = https://github.com/rickarmstrong/gazebo_apriltag.git

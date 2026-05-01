@@ -118,9 +118,10 @@ cd ~/your_ws
 git submodule update --init --recursive
 ```
 
-The two submodules are:
+The three submodules are:
 - `src/ardupilot` — ArduPilot firmware
 - `src/ardupilot_gazebo` — Gazebo Harmonic plugin
+- `src/gazebo_apriltag` — AprilTag Gazebo plugin
 
 ---
 
@@ -261,13 +262,15 @@ source install/setup.bash
 
 Launch at 640×480×15 fps with IMU/tf/sync disabled (confirmed safe at Pi 4 CPU load):
 ```bash
-ros2 run realsense2_camera realsense2_camera_node --ros-args \
-  -p enable_color:=true -p enable_depth:=false \
-  -p enable_infra1:=false -p enable_infra2:=false \
-  -p enable_accel:=false -p enable_gyro:=false \
-  -p publish_tf:=false -p enable_sync:=false \
-  -p rgb_camera.color_profile:=640x480x15
+ros2 launch realsense2_camera rs_launch.py \
+  enable_color:=true enable_depth:=false \
+  enable_infra1:=false enable_infra2:=false \
+  enable_accel:=false enable_gyro:=false \
+  publish_tf:=false enable_sync:=false \
+  rgb_camera.color_profile:=640x480x15
 ```
+
+> **Important:** Use `rs_launch.py`, not `ros2 run realsense2_camera_node` — the node launcher does not reliably apply camera profile parameters.
 
 > Valid fps values at 640×480: **6, 15, 30 only.** Values 10 and 12 silently fall back to 1280×720×30.
 
