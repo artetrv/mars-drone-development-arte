@@ -33,3 +33,7 @@ src/tag_hover_sim/controller_output.md
 src/tag_hover_sim/side_tangent.md
 src/tag_hover_sim/*.png
 src/tag_hover_two_tags/tag_hover_sim/chatgptpromptforthidsdir.md
+src/tag_hover_two_tags/tag_hover_sim/se3_cont*.md
+
+# Tooling markers
+.codex

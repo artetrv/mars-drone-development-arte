@@ -44,6 +44,7 @@ setup(
             'tag_oscillator = tag_hover_two_tags.tag_oscillator:main',
             'hover_yaw_search = tag_hover_controller.hover_yaw_search:main',
             'hover_yaw_search_v1 = tag_hover_sim.hover_yaw_search_v1:main',
+            'hover_guided_hold_se3 = tag_hover_sim.hover_guided_hold_se3:main',
             'tag_overlay = tag_hover_two_tags.tag_overlay:main',
             'video_vibration_analyzer = tag_hover_two_tags.video_vibration_analyzer:main',
         ],
