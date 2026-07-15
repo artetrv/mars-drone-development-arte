@@ -5,7 +5,10 @@
 #                          reducing compute by ~4x. Acceptable pose accuracy at
 #                          typical hover distances (1–2 m) with 0.127 m tags.
 #
-# Use this file on the Raspberry Pi 5 to stay within CPU budget.
+# OPTIONAL on the Pi 5 — benchmarked 2026-07 with the OAK-D-LITE at 1280x720:
+# default (non-decimated) params run ~22 Hz detections at ~70% of one core,
+# so this file is only needed for extra CPU/thermal headroom, at a small
+# cost in pose accuracy.
 # See docs/QUICK_RUNBOOK.md Section B.0 for full Pi tuning notes.
 
 apriltag_node:

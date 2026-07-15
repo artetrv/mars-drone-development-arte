@@ -17,7 +17,7 @@ Camera frame note:
   This must match camera_frame across the PnP broadcaster and the flight controller.
   Verify with: ros2 topic echo /camera/color/camera_info | grep frame_id
 
-Raspberry Pi usage (Pi-safe resolution + Pi-optimised AprilTag params):
+Raspberry Pi usage — optional on a Pi 5 (defaults are fine); use if CPU-bound:
   ros2 launch tag_hover_two_tags hardware_vision_stack.launch.py \
     color_width:=640 color_height:=480 color_fps:=10 \
     apriltag_params:=$HOME/harmonic_ws/src/tag_hover_two_tags/config/apriltag_params_pi.yaml
@@ -44,8 +44,8 @@ def generate_launch_description():
             'apriltag_params.yaml',
         ),
         description=(
-            'AprilTag detector params file. '
-            'Pi: use apriltag_params_pi.yaml (quad_decimate=2 for lower CPU load).'
+            'AprilTag detector params file. Optional: apriltag_params_pi.yaml '
+            '(quad_decimate=2) lowers CPU load if needed; defaults are fine on a Pi 5.'
         ),
     )
 

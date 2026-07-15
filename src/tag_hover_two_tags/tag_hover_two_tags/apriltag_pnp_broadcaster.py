@@ -8,7 +8,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 from sensor_msgs.msg import CameraInfo
 from apriltag_msgs.msg import AprilTagDetectionArray
-from geometry_msgs.msg import TransformStamped, Quaternion
+from geometry_msgs.msg import PoseStamped, TransformStamped, Quaternion
 from tf2_ros import TransformBroadcaster
 
 
@@ -31,6 +31,18 @@ class TagPnPBroadcaster(Node):
         self.tag_size = float(self.declare_parameter('tag_size_m', 0.0673).get_parameter_value().double_value)
         det_topic = self.declare_parameter('detections_topic', '/detections').get_parameter_value().string_value
         cam_info_topic = self.declare_parameter('camera_info_topic', '/camera_info').get_parameter_value().string_value
+
+        # Per-tag PoseStamped topics for the measurement pipeline
+        # (relative_vibration_pose). Jazzy's apriltag_msgs carries no pose in
+        # the detection message, so the PnP result here is the only source.
+        ref_tag_id = int(self.declare_parameter('ref_tag_id', 0).value)
+        vib_tag_id = int(self.declare_parameter('vib_tag_id', 1).value)
+        ref_pose_topic = self.declare_parameter('ref_pose_topic', '/apriltag_ref/pose').get_parameter_value().string_value
+        vib_pose_topic = self.declare_parameter('vib_pose_topic', '/apriltag_vib/pose').get_parameter_value().string_value
+        self.pose_pubs = {
+            ref_tag_id: self.create_publisher(PoseStamped, ref_pose_topic, 10),
+            vib_tag_id: self.create_publisher(PoseStamped, vib_pose_topic, 10),
+        }
 
         qos_det = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_LAST, depth=10)
         qos_cam = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_LAST, depth=5)
@@ -84,6 +96,17 @@ class TagPnPBroadcaster(Node):
             t.transform.translation.z = float(tvec[2])
             t.transform.rotation = quat_from_rvec(rvec)
             self.br.sendTransform(t)
+
+            pub = self.pose_pubs.get(tid)
+            if pub is not None:
+                p = PoseStamped()
+                p.header.stamp = msg.header.stamp
+                p.header.frame_id = self.camera_frame
+                p.pose.position.x = float(tvec[0])
+                p.pose.position.y = float(tvec[1])
+                p.pose.position.z = float(tvec[2])
+                p.pose.orientation = t.transform.rotation
+                pub.publish(p)
 
 
 def main():

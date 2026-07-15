@@ -3,9 +3,9 @@
 ROS 2 Jazzy + Gazebo Harmonic + ArduPilot SITL workspace for AprilTag-based UAV structural health monitoring research.
 
 **Stack:** ROS 2 Jazzy · Gazebo Harmonic · ArduPilot SITL · MAVROS  
-**Hardware target:** Raspberry Pi 4 (companion) + Pixhawk (ArduPilot firmware)
+**Hardware target:** Raspberry Pi 5 (companion) + Pixhawk (ArduPilot firmware) + Luxonis OAK-D-LITE camera
 
-> New here? Start with [INSTALL.md](INSTALL.md) to set up your environment, then come back to this file.
+> New here? Start with [md/INSTALL.md](md/INSTALL.md) to set up your environment, then come back to this file.
 
 ---
 
@@ -25,7 +25,7 @@ Mars-drone-development/
 │   ├── ardupilot_gazebo/       # C++ Gazebo plugin + Iris drone models (submodule)
 │   └── ardupilot/              # ArduPilot firmware + SITL (submodule)
 ├── setup_harmonic_env.sh       # One-shot environment setup (Gazebo paths, ROS, DDS)
-├── INSTALL.md                  # Full installation guide — start here
+├── md/                         # Documentation (INSTALL.md, QUICK_REFERENCE.md, dev notes)
 └── README.md                   # This file
 ```
 
@@ -57,7 +57,7 @@ This script auto-detects your workspace root — it works regardless of where yo
 
 **Single-tag hover (tag_hover_sim):**
 ```bash
-# See src/tag_hover_sim/QUICK_REFERENCE.md for the full 7-terminal bringup sequence
+# See md/QUICK_REFERENCE.md for the full 7-terminal bringup sequence
 ```
 
 **Two-tag vibration measurement (tag_hover_two_tags):**
@@ -72,7 +72,7 @@ ros2 launch tag_hover_two_tags sim_lockon_backbone.launch.py
 
 | Package | What it does |
 |---|---|
-| `tag_hover_sim` | IBVS hover controller with yaw-search. Targets a single AprilTag (ID 0). Runs in sim and on hardware (Pi 4 + Pixhawk). |
+| `tag_hover_sim` | IBVS hover controller with yaw-search. Targets a single AprilTag (ID 0). Runs in sim and on hardware (Pi 5 + Pixhawk). |
 | `tag_hover_two_tags` | Two-tag relative pose pipeline. Tag 0 = reference, Tag 1 = vibrating target. Computes $T_{vib}^{ref}$ to cancel UAV drift. |
 | `ardupilot_gazebo` | Gazebo Harmonic plugin that bridges ArduPilot SITL via UDP FDM (ports 9002/9003). |
 | `ardupilot` | ArduPilot firmware. Used for SITL (`sim_vehicle.py`) and flashed to Pixhawk for hardware flights. |
@@ -111,11 +111,11 @@ ros2 topic echo /relative_vibration_pose --once
 
 ---
 
-## Hardware (Pi 4)
+## Hardware (Pi 5)
 
-The Pi 4 companion computer runs a single `tag_hover_controller` package at `~/drone-pi/`. It mirrors `tag_hover_sim` exactly. See [INSTALL.md](INSTALL.md#pi-4-companion-setup) for the Pi-side setup.
+The Pi 5 companion computer runs this full workspace directly, with the Luxonis OAK-D-LITE camera (`hardware_vision_stack_oak.launch.py` + `hover_controller_oak.launch.py`). The earlier Pi 4 + RealSense D455 deployment (separate `~/drone-pi/` workspace with `tag_hover_controller`) is described in [md/INSTALL.md](md/INSTALL.md#10-pi-companion-setup-legacy-pi-4--d455) for reference.
 
-**Pi IP:** `<PI_IP>` · **User:** `mars` · **FCU serial:** `/dev/ttyS0` at 57600 baud
+**Pi IP:** `<PI_IP>` · **User:** `mars` · **FCU serial:** `/dev/ttyAMA0` (Pi 5 GPIO UART) at 57600 baud
 
 ---
 
@@ -131,9 +131,11 @@ In HOLD, the drone uses MTF-01 optical flow to hold position while `/measurement
 
 | File | Contents |
 |---|---|
-| `INSTALL.md` | Full environment setup, dependency list, build instructions |
-| `src/tag_hover_sim/QUICK_REFERENCE.md` | Copy-paste 7-terminal sim bringup |
+| `md/INSTALL.md` | Full environment setup, dependency list, build instructions |
+| `md/QUICK_REFERENCE.md` | Copy-paste 7-terminal sim bringup |
+| `md/BENCH_TEST_OAK.md` | No-fly bench test: OAK + AprilTag detection + vibration pipeline |
+| `md/PROJECT_CONTEXT.md` | Project scope, objectives, decision authority |
+| `md/CONTROLLER_DEV_NOTES.md` | Controller development notes |
+| `md/MEASUREMENT_ARCHITECTURE_NOTES.md` | Vibration measurement architecture |
 | `src/tag_hover_sim/README.md` | Single-tag package details, parameters, controller versions |
 | `src/tag_hover_two_tags/README.md` | Two-tag measurement package details |
-| `AGENTS.md` | AI orchestration rules (for Claude Code sessions) |
-| `PROJECT_CONTEXT.md` | Project scope, objectives, decision authority |

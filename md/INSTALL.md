@@ -1,9 +1,11 @@
 # Installation Guide
 
-This guide walks through setting up the full simulation stack (ROS 2 Jazzy + Gazebo Harmonic + ArduPilot SITL) from a clean Ubuntu 24.04 machine, and optionally deploying to a Raspberry Pi 4 companion computer.
+This guide walks through setting up the full simulation stack (ROS 2 Jazzy + Gazebo Harmonic + ArduPilot SITL) from a clean Ubuntu 24.04 machine, and optionally deploying to a Raspberry Pi companion computer.
 
 **Target OS:** Ubuntu 24.04 LTS (Noble)  
-**Architecture:** x86_64 (simulation), ARM64 (Pi 4 companion)
+**Architecture:** x86_64 (simulation), ARM64 (Pi 5 companion)
+
+> **Current hardware (2026):** the companion computer is a **Raspberry Pi 5** running this full workspace directly with a **Luxonis OAK-D-LITE** camera — see `src/tag_hover_two_tags/launch/hardware_vision_stack_oak.launch.py`. Section 10 below describes the earlier Pi 4 + RealSense D455 deployment and is kept for reference.
 
 ---
 
@@ -18,7 +20,7 @@ This guide walks through setting up the full simulation stack (ROS 2 Jazzy + Gaz
 7. [Build ArduPilot SITL](#7-build-ardupilot-sitl)
 8. [Build the ROS 2 workspace](#8-build-the-ros-2-workspace)
 9. [Verify the installation](#9-verify-the-installation)
-10. [Pi 4 companion setup](#10-pi-4-companion-setup)
+10. [Pi companion setup (legacy: Pi 4 + D455)](#10-pi-companion-setup-legacy-pi-4--d455)
 
 ---
 
@@ -228,7 +230,9 @@ src/tag_hover_sim/QUICK_REFERENCE.md
 
 ---
 
-## 10. Pi 4 companion setup
+## 10. Pi companion setup (legacy: Pi 4 + D455)
+
+> **Legacy section.** The current companion is a Pi 5 running the full workspace with the OAK-D-LITE camera (see note at the top of this guide) — the steps in sections 1–9 cover it. The instructions below apply to the earlier Pi 4 + RealSense D455 setup.
 
 The Pi 4 runs a separate lightweight workspace (`~/drone-pi/`) with a single package: `tag_hover_controller`.
 
