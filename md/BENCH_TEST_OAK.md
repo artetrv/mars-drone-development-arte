@@ -13,7 +13,7 @@ de vibración relativa funciona, **sin armar ni volar el drone**.
   e **ID 1** (el "vibrante"). Deben ser **del mismo tamaño** — el PnP usa
   un solo `tag_size_m` para ambos.
 - Medir con regla el lado del **cuadro negro** de los tags.
-  Los tags actuales (javier's) miden **165.1 mm** (6.5 in) → `tag_size_m:=0.1651`.
+  Los tags actuales miden **165.1 mm** (6.5 in) → `tag_size_m:=0.1651`.
   Si usas otros, mide y ajusta el argumento.
 
 > Nota (2026-07-15): el pipeline de medición se arregló en esta fecha —
@@ -31,6 +31,22 @@ cd ~/mars-drone-development-arte
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 ```
+
+---
+
+## Paso 0 — Carpeta del experimento (una vez por corrida)
+
+Cada experimento vive en su propia carpeta dentro de `experiments/`. Antes de
+lanzar nada, crea la del día:
+
+```bash
+./tools/new_experiment.sh              # → experiments/2026-07-17_123456/
+./tools/new_experiment.sh vuelo1       # → experiments/2026-07-17_123456_vuelo1/
+```
+
+El script deja el enlace `experiments/current` apuntando a la carpeta nueva —
+todos los comandos de abajo escriben a `experiments/current`, así que el CSV,
+el video y las gráficas de cada corrida quedan juntos automáticamente.
 
 ---
 
@@ -53,13 +69,15 @@ Espera a ver `Camera ready!` (~5 s). **Si no aparece**, ve a "Si algo falla".
 ## Terminal 2 — Nodo de medición de vibración
 
 ```bash
-ros2 run tag_hover_two_tags relative_vibration_pose
+ros2 run tag_hover_two_tags relative_vibration_pose --ros-args \
+    -p csv_dir:=~/mars-drone-development-arte/experiments/current
 ```
 
 Publica `/relative_vibration_pose` (pose del tag 1 relativa al tag 0) y
-guarda un CSV en `~/.ros/tag_hover_two_tags/`. Debe imprimir
-`Logging relative pose to <ruta>` — apunta esa ruta: es tu archivo de
-resultados.
+guarda un CSV en la carpeta del experimento (sin el parámetro `csv_dir`
+caería en `~/.ros/tag_hover_two_tags/`). Debe imprimir
+`Logging relative pose to <ruta>` — verifica que la ruta sea la carpeta
+del experimento de hoy.
 
 ---
 
@@ -103,6 +121,52 @@ ros2 topic echo /relative_vibration_pose
 
 ---
 
+## Terminal 6 — Grabar video de la OAK (opcional pero recomendado)
+
+Grabar el video permite correr después el análisis offline
+(`tools/video_vibration_analyzer.py`) y compararlo contra el CSV del pipeline
+en vivo — dos caminos independientes al mismo resultado, buen cross-check.
+
+**Solo la primera vez** — guarda la calibración de la OAK en un YAML:
+
+```bash
+ros2 topic echo /oak/rgb/camera_info --once
+```
+
+Del array `k: [fx, 0, cx, 0, fy, cy, 0, 0, 1]` copia los valores a
+`~/oak_rgb.yaml` (con nano, no es un comando):
+
+```yaml
+fx: <k[0]>
+fy: <k[4]>
+cx: <k[2]>
+cy: <k[5]>
+distortion: [<los 8 valores del array d:>]
+```
+
+La calibración no cambia mientras uses la misma resolución — este archivo se
+reutiliza para siempre.
+
+**En cada corrida** — mide el frame rate real y graba:
+
+```bash
+# 1. Mide el rate (anota el número, Ctrl+C para salir)
+ros2 topic hz /oak/rgb/image_raw
+
+# 2. Graba usando ESE número como fps — con decimal, ej. 30.0 (Ctrl+C para terminar)
+ros2 run image_view video_recorder --ros-args \
+    -r image:=/oak/rgb/image_raw \
+    -p filename:=/home/mars/mars-drone-development-arte/experiments/current/experiment.avi \
+    -p fps:=30.0 -p codec:=MJPG
+```
+
+> **Importante:** el `fps:=` debe coincidir con lo que dijo `topic hz` *mientras
+> grabas* (la codificación carga CPU y puede bajar el rate). El analizador de
+> video calcula el tiempo como `frame / fps` — un fps equivocado escala todas
+> las frecuencias del resultado.
+
+---
+
 ## El test de vibración
 
 Con el paso 4 corriendo:
@@ -122,19 +186,57 @@ Con el paso 4 corriendo:
 
 ## Cómo terminar y conseguir los resultados
 
-1. **Ctrl+C en la Terminal 2 primero** — cierra el CSV correctamente.
-2. Ctrl+C en el resto de terminales.
-3. Verifica que no quedaron procesos huérfanos (causan problemas al relanzar):
+1. **Ctrl+C en la Terminal 6 primero** (si grabaste video) — cierra el `.avi`.
+2. **Ctrl+C en la Terminal 2** — cierra el CSV correctamente.
+3. Ctrl+C en el resto de terminales.
+4. Verifica que no quedaron procesos huérfanos (causan problemas al relanzar):
    ```bash
    pgrep -af "apriltag|depthai|component_container|relative_vibration"
    # si sale algo: pkill -f apriltag_node  (etc.)
    ```
-4. Tus datos:
+5. Tus datos — todo junto en la carpeta del experimento:
    ```bash
-   ls -la ~/.ros/tag_hover_two_tags/
+   ls -la experiments/current/
    ```
    El CSV de la corrida debe pesar **varios KB**. Un archivo de 0 bytes =
    corrida vacía, no llegaron poses (revisa el paso 3 de la Terminal 5).
+
+### Path A — resultados del pipeline en vivo (CSV)
+
+El CSV ya contiene la pose relativa (x, y, z, roll, pitch, yaw en metros y
+radianes). Para sacar las gráficas de desplazamiento y frecuencia:
+
+```bash
+python3 tools/csv_vibration_analyzer.py experiments/current/relative_vibration_*.csv
+```
+
+Imprime el resumen (rate, RMS y Hz dominante por eje) y deja
+`*_displacement.png` y `*_frequency.png` junto al CSV.
+
+### Path B — resultados del video grabado
+
+Requiere el video de la Terminal 6 y la calibración `~/oak_rgb.yaml`
+(dependencias una sola vez: `pip install -r tools/requirements.txt`):
+
+```bash
+python3 tools/video_vibration_analyzer.py experiments/current/experiment.avi \
+    --calibration ~/oak_rgb.yaml --tag-size 0.1651 --annotated-video
+```
+
+Deja en la misma carpeta del experimento: el CSV por frame,
+`experiment_vibration.csv`, `experiment_displacement.png`,
+`experiment_frequency.png` y `experiment_annotated.mp4` (el video con las
+detecciones dibujadas — **lo primero que hay que revisar** si los resultados
+salen raros).
+
+### Comparación
+
+Los dos paths calculan la misma física con el mismo método (detección de
+esquinas → PnP → pose relativa `T_vib_ref = inv(T_ref_cam) · T_vib_cam`), así
+que la **frecuencia dominante (Hz)** y el **RMS (mm)** deben coincidir entre
+las gráficas de A y B. Si difieren mucho, lo más probable es `--tag-size`
+equivocado, calibración que no corresponde, o el `fps:=` de la grabación mal
+puesto (eso escala las frecuencias del Path B).
 
 ---
 

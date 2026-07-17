@@ -15,6 +15,12 @@ venv/
 __pycache__/
 *.pyc
 
+# Experiment data: CSV/PNG results are small and can be committed,
+# but raw videos are huge (>100 MB) and must stay local
+experiments/**/*.avi
+experiments/**/*.mp4
+experiments/current
+
 # Personal notes — not for public repo
 docs/
 tasks.md
